@@ -20,7 +20,7 @@ const InvoiceList = ({ token }) => {
         headers: { Authorization: `Bearer ${token}` }
       });
       setInvoices(res.data);
-    } catch (err) {
+    } catch {
       alert('Failed to fetch invoices');
     }
     setLoading(false);
@@ -33,7 +33,7 @@ const InvoiceList = ({ token }) => {
           headers: { Authorization: `Bearer ${token}` }
         });
         fetchInvoices();
-      } catch (err) {
+      } catch {
         alert('Failed to delete invoice');
       }
     }
