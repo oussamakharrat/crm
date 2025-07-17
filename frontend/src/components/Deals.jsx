@@ -2,6 +2,8 @@ import React, { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../AuthContext";
 import { Link } from "react-router-dom";
 import api from "../api";
+import { fetchContacts } from '../api';
+import { fetchClients } from '../api';
 
 const Deals = () => {
   const [deals, setDeals] = useState([]);
@@ -18,6 +20,8 @@ const Deals = () => {
   const [editingDealId, setEditingDealId] = useState(null);
   const [newStage, setNewStage] = useState("");
   const [updating, setUpdating] = useState(false);
+  const [contacts, setContacts] = useState([]);
+  const [clients, setClients] = useState([]);
 
   // Helper to check if user is admin
   const isAdmin = user?.roles?.includes("Admin");
@@ -53,6 +57,15 @@ const Deals = () => {
     };
     if (user?.token) fetchDeals();
   }, [user]);
+
+  // Fetch contacts when the add form is shown
+  useEffect(() => {
+    if (showAddForm && user?.token) {
+      fetchClients(user.token)
+        .then(res => setClients(res.data))
+        .catch(() => setClients([]));
+    }
+  }, [showAddForm, user]);
 
   const handleAddDealChange = (e) => {
     const { name, value } = e.target;
@@ -199,15 +212,19 @@ const Deals = () => {
                 />
               </div>
               <div className="mb-3">
-                <label className="form-label">Contact ID</label>
-                <input
-                  type="text"
-                  className="form-control"
+                <label className="form-label">Client</label>
+                <select
+                  className="form-select"
                   name="contact_id"
                   value={newDeal.contact_id}
                   onChange={handleAddDealChange}
                   required
-                />
+                >
+                  <option value="">Select Client</option>
+                  {clients.map(c => (
+                    <option key={c.id} value={c.id}>{c.name} ({c.email})</option>
+                  ))}
+                </select>
               </div>
               {/* owner_id is not shown as an input, it will always use the current user's id */}
               <button className="btn btn-success me-2" type="submit" disabled={adding}>

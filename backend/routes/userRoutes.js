@@ -4,7 +4,7 @@ import {
   createUserAuth, getUserAuth, getAllUserAuth, updateUserAuthToken,
   getAllRoles, assignRoleToUser, getUserRoles,
   getAllPermissions, createPermission, assignPermissionToRole, getRolePermissions,
-  loginUser, getCurrentUserDetails, updateCurrentUserProfile, uploadAvatar
+  loginUser, getCurrentUserDetails, updateCurrentUserProfile, uploadAvatar, getAllClients
 } from '../controllers/userController.js';
 import { authenticate } from '../middleware/authMiddleware.js';
 import upload from '../middleware/uploadMiddleware.js';
@@ -47,5 +47,7 @@ router.get('/permissions', getAllPermissions);
 router.post('/permissions', createPermission);
 router.post('/permissions/assign', assignPermissionToRole);
 router.get('/permissions/role/:role_id', getRolePermissions);
+
+router.get('/clients', authenticate, getAllClients);
 
 export default router;

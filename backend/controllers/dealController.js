@@ -1,4 +1,9 @@
 import { Deal } from '../models/Deal.js';
+import { Invoice } from '../models/Invoice.js';
+import { Notification } from '../models/Notification.js';
+import { UserDetails } from '../models/User.js';
+import { generateInvoicePdf } from '../utils/invoicePdf.js';
+import db from '../config/db.js';
 
 function hasRole(roles, ...required) {
   return roles && required.some(r => roles.map(role => role.toLowerCase()).includes(r.toLowerCase()));
@@ -38,6 +43,36 @@ export const createDeal = async (req, res) => {
       return res.status(403).json({ error: 'Forbidden: Requires Admin or User role.' });
     }
     const deal = await Deal.create({ title, value, stage, owner_id, contact_id });
+
+    // --- INVOICE GENERATION ---
+    const today = new Date();
+    const invoice_number = `INV-${today.getFullYear()}${String(today.getMonth()+1).padStart(2,'0')}${String(today.getDate()).padStart(2,'0')}-${deal.id}`;
+    const issue_date = today.toISOString().slice(0, 10);
+    const due_date = new Date(today.getTime() + 30*24*60*60*1000).toISOString().slice(0, 10); // +30 days
+    const amount = value;
+    const tax = Math.round(value * 0.1 * 100) / 100; // 10% tax
+    const total = Math.round((Number(amount) + Number(tax)) * 100) / 100;
+    let pdf_path = null;
+    const invoice = await Invoice.create({ invoice_number, deal_id: deal.id, contact_id, issue_date, due_date, amount, tax, total, pdf_path });
+
+    // --- PDF GENERATION ---
+    const client = await UserDetails.findById(contact_id);
+    pdf_path = generateInvoicePdf({ ...invoice, amount, tax, total }, client);
+    await db.execute('UPDATE invoices SET pdf_path = ? WHERE id = ?', [pdf_path, invoice.id]);
+
+    // --- NOTIFICATION ---
+    await Notification.create({
+      user_id: contact_id, // assuming contact_id is the user_id for clients
+      type: 'invoice',
+      title: 'New Invoice',
+      message: `Your invoice for deal "${title}" is ready.`,
+      pdf_path: pdf_path,
+      invoice_number: invoice_number,
+      label: `Invoice ${invoice_number}`,
+      time: new Date().toISOString().slice(0, 19).replace('T', ' '),
+      unread: true
+    });
+
     res.status(201).json(deal);
   } catch (err) {
     res.status(500).json({ error: err.message });

@@ -3,6 +3,7 @@ import { UserDetails, UserAuth, Role, RoleUser, Permissions, RolePermissions } f
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import mysql from 'mysql2';
+import { User } from '../models/User.js';
 
 
 dotenv.config();
@@ -311,6 +312,15 @@ export const loginUser = async (req, res) => {
       permissions: uniquePermissions,
       contact_id
     });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const getAllClients = async (req, res) => {
+  try {
+    const clients = await User.findAllClients();
+    res.json(clients);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

@@ -10,26 +10,47 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      type: 'message',
-      title: 'Emma Watson',
-      message: 'Like what you see? Let\'s talk about your project.',
-      time: '53 min ago',
-      avatar: 'E',
-      unread: true
-    },
-    {
-      id: 2,
-      type: 'deal',
-      title: 'New Deal Created',
-      message: 'Enterprise Software License deal has been created.',
-      time: '2 hours ago',
-      avatar: 'D',
-      unread: true
+  const [notifications, setNotifications] = useState([]);
+  const [showNotificationDropdown, setShowNotificationDropdown] = useState(false);
+  const notificationDropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        notificationDropdownRef.current &&
+        !notificationDropdownRef.current.contains(event.target)
+      ) {
+        setShowNotificationDropdown(false);
+      }
     }
-  ]);
+    if (showNotificationDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showNotificationDropdown]);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const token = localStorage.getItem('token') || user?.token;
+        if (!token) return;
+        const res = await fetch('http://localhost:5000/api/notifications', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (!res.ok) throw new Error('Failed to fetch notifications');
+        const data = await res.json();
+        setNotifications(Array.isArray(data) ? data : []);
+      } catch (err) {
+        setNotifications([]);
+      }
+    };
+    fetchNotifications();
+  }, [user]);
 
   // Add a ref for the avatar dropdown toggle
   const avatarDropdownRef = useRef(null);
@@ -159,80 +180,66 @@ const Header = () => {
             </li>
 
             {/* Notifications Dropdown */}
-            <li className="nav-item dropdown">
-              <a className="nav-link dropdown-toggle" id="navbarDropdownNotification" href="#!" role="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
+            <li className="nav-item dropdown" ref={notificationDropdownRef} style={{ position: 'relative' }}>
+              <a
+                className="nav-link"
+                href="#"
+                onClick={e => {
+                  e.preventDefault();
+                  setShowNotificationDropdown(v => !v);
+                }}
+                style={{ cursor: 'pointer' }}
+              >
                 <span className="text-500 fas fa-bell nav-link-fa"></span>
                 <span className="badge rounded-pill bg-soft-secondary text-secondary bg-soft-warning text-warning count-indicator">
                   {notifications.filter(n => n.unread).length}
                 </span>
               </a>
-              <div className="dropdown-menu dropdown-menu-end navbar-dropdown-caret py-0 dropdown-notification shadow border rounded-3"
-                aria-labelledby="navbarDropdownNotification"
-                style={{
-                  minWidth: 340,
-                  background: 'var(--phoenix-card-bg)',
-                  border: '1px solid var(--phoenix-card-border-color)',
-                  color: 'var(--phoenix-card-color)'
-                }}
-              >
-                <div className="card position-relative border-0 rounded-3" style={{ boxShadow: 'none', background: 'transparent' }}>
-                  <div className="card-header p-3 border-bottom rounded-top-3" style={{ background: 'var(--phoenix-card-header-bg)', color: 'var(--phoenix-card-header-color)' }}>
-                    <div className="d-flex justify-content-between align-items-center">
+              {showNotificationDropdown && (
+                <div className="dropdown-menu show dropdown-menu-end navbar-dropdown-caret py-0 dropdown-notification shadow border rounded-3"
+                  style={{
+                    minWidth: 340,
+                    background: 'var(--phoenix-card-bg)',
+                    border: '1px solid var(--phoenix-card-border-color)',
+                    color: 'var(--phoenix-card-color)',
+                    display: 'block',
+                    position: 'absolute',
+                    right: 0,
+                    top: '100%',
+                    zIndex: 9999
+                  }}
+                >
+                  <div className="card position-relative border-0 rounded-3" style={{ boxShadow: 'none', background: 'transparent' }}>
+                    <div className="card-header p-3 border-bottom rounded-top-3" style={{ background: 'var(--phoenix-card-header-bg)', color: 'var(--phoenix-card-header-color)' }}>
                       <h5 className="text-body-emphasis mb-0" style={{ color: 'var(--phoenix-card-header-color)' }}>Notifications</h5>
-                      <button 
-                        className="btn btn-link text-decoration-none p-0 text-primary fw-semibold"
-                        onClick={() => setNotifications(notifications.map(n => ({ ...n, unread: false })))}
-                        style={{ fontSize: 14, color: 'var(--phoenix-primary)' }}
-                      >
-                        Mark all as read
-                      </button>
                     </div>
-                  </div>
-                  <div className="card-body p-0 rounded-bottom-3" style={{ background: 'var(--phoenix-card-bg)' }}>
-                    <div className="scrollbar-overlay" style={{height: '27rem'}}>
-                      {notifications.length > 0 ? (
-                        notifications.map(notification => (
-                          <div key={notification.id} className="px-2 py-2 border-bottom notification-card position-relative"
-                            style={{ background: 'var(--phoenix-card-bg)', borderColor: 'var(--phoenix-card-border-color)', color: 'var(--phoenix-card-color)', fontSize: 14, minHeight: 48 }}>
-                            <div className="d-flex align-items-center">
-                              <div className="flex-shrink-0">
-                                <div className="avatar avatar-xl me-3">
-                                  <div className="avatar-name rounded-circle bg-soft-primary text-primary">
-                                    <span className="fs-0 text-primary">{notification.avatar}</span>
-                                  </div>
-                                </div>
+                    <div className="card-body p-0 rounded-bottom-3" style={{ background: 'var(--phoenix-card-bg)' }}>
+                      <div className="scrollbar-overlay" style={{height: '27rem'}}>
+                        {notifications.length > 0 ? (
+                          notifications
+                            .filter(n => n.type === 'invoice')
+                            .map(notification => (
+                              <div key={notification.id} className="px-2 py-2 border-bottom notification-card position-relative">
+                                <a
+                                  href={`http://localhost:5000${notification.pdf_path}`}
+                                  download
+                                  style={{ color: 'var(--phoenix-primary)', fontWeight: 500 }}
+                                >
+                                  {notification.label || `Invoice ${notification.invoice_number}`}
+                                </a>
+                                <div style={{ fontSize: 12, color: '#888' }}>{notification.time}</div>
                               </div>
-                              <div className="flex-1 d-flex flex-between-center">
-                                <div>
-                                  <h6 className="fs-0 mb-0 fw-semibold" style={{ color: 'var(--phoenix-card-header-color)' }}>{notification.title}</h6>
-                                  <p className="mb-1 fs-0 text-600" style={{ color: 'var(--phoenix-card-color)' }}>{notification.message}</p>
-                                  <p className="text-500 fs-0 mb-0" style={{ color: 'var(--phoenix-card-color)' }}>
-                                    <span className="me-2 fas fa-clock"></span>{notification.time}
-                                  </p>
-                                </div>
-                                {notification.unread && (
-                                  <div className="ms-2">
-                                    <span className="badge badge-phoenix badge-phoenix-primary">New</span>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
+                            ))
+                        ) : (
+                          <div className="text-center py-4">
+                            <p className="text-muted mb-0" style={{ color: 'var(--phoenix-card-color)' }}>No notifications</p>
                           </div>
-                        ))
-                      ) : (
-                        <div className="text-center py-4">
-                          <p className="text-muted mb-0" style={{ color: 'var(--phoenix-card-color)' }}>No notifications</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  <div className="card-footer p-0 border-top rounded-bottom-3" style={{ background: 'var(--phoenix-card-header-bg)', borderColor: 'var(--phoenix-card-border-color)', color: 'var(--phoenix-card-header-color)' }}>
-                    <div className="my-2 text-center fw-bold fs-0 text-body">
-                      <a className="fw-bolder text-primary" href="#" style={{ color: 'var(--phoenix-primary)', fontWeight: 400, fontSize: 14 }}>View all notifications</a>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              )}
             </li>
 
             {/* User Profile Dropdown */}

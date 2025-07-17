@@ -150,3 +150,17 @@ export class RolePermissions {
     return rows;
   }
 }
+
+export class User {
+  static async findAllClients() {
+    const [rows] = await db.execute(`
+      SELECT u.id, u.name, u.phone, u.address, u.avatar, a.email
+      FROM userdetails u
+      JOIN roleuser ru ON u.id = ru.user_id
+      JOIN role r ON ru.role_id = r.id
+      JOIN userauth a ON u.id = a.user_id
+      WHERE LOWER(r.name) = 'client'
+    `);
+    return rows;
+  }
+}

@@ -10,6 +10,8 @@ import reportRoutes from './routes/reportRoutes.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
+import invoiceRoutes from './routes/invoiceRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -45,6 +47,8 @@ app.use("/api", dealRoutes);
 app.use("/api/contacts", contactRoutes);
 app.use("/api/leads", leadRoutes);
 app.use("/api", reportRoutes);
+app.use("/api", invoiceRoutes);
+app.use("/api", notificationRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);

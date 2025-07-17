@@ -18,6 +18,7 @@ import DealDetails from "./components/DealDetails";
 import LeadDetails from "./components/LeadDetails";
 import ReportDetails from "./components/ReportDetails";
 import Profile from "./components/Profile";
+import InvoiceList from './components/InvoiceList';
 import './App.css';
 
 const MainApp = () => {
@@ -52,6 +53,7 @@ const MainApp = () => {
             <Route path="/report-details/:id" element={<ReportDetails />} />
             <Route path="/report-details" element={<ReportDetails />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/invoices" element={<InvoiceList />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </div>

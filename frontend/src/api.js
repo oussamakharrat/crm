@@ -82,4 +82,12 @@ export const fetchHighestDeal = (token) => api.get("/reports/highest-deal", {
   headers: { Authorization: `Bearer ${token}` }
 });
 
+export const fetchContacts = (token) => api.get("/contacts", {
+  headers: { Authorization: `Bearer ${token}` }
+});
+
+export const fetchClients = (token) => api.get("/clients", {
+  headers: { Authorization: `Bearer ${token}` }
+});
+
 export default api; 
