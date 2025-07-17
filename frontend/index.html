@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en-US" dir="ltr" data-navigation-type="default" data-navbar-horizontal-shape="default">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Phoenix CRM</title>
+    
+    <!-- ===============================================-->
+    <!--    Favicons-->
+    <!-- ===============================================-->
+    <link rel="apple-touch-icon" sizes="180x180" href="/phoenix/v1.20.1/assets/img/favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/phoenix/v1.20.1/assets/img/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/phoenix/v1.20.1/assets/img/favicons/favicon-16x16.png">
+    
+    <!-- ===============================================-->
+    <!--    Stylesheets-->
+    <!-- ===============================================-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Phoenix CSS -->
+    <link rel="stylesheet" href="/phoenix/v1.20.1/assets/css/theme.min.css">
+    <link rel="stylesheet" href="/phoenix/v1.20.1/assets/css/user.min.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/phoenix/v1.20.1/vendors/fontawesome/all.min.css">
+    
+    <!-- Simplebar -->
+    <link rel="stylesheet" href="/phoenix/v1.20.1/vendors/simplebar/simplebar.min.css">
+    
+    <!-- ===============================================-->
+    <!--    JavaScripts-->
+    <!-- ===============================================-->
+    <script src="/phoenix/v1.20.1/vendors/popper/popper.min.js"></script>
+    <script src="/phoenix/v1.20.1/vendors/bootstrap/bootstrap.min.js"></script>
+    <script src="/phoenix/v1.20.1/vendors/simplebar/simplebar.min.js"></script>
+    <script src="/phoenix/v1.20.1/vendors/feather-icons/feather.min.js"></script>
+    <script src="/phoenix/v1.20.1/vendors/fontawesome/all.min.js"></script>
+    <script src="/phoenix/v1.20.1/vendors/lodash/lodash.min.js"></script>
+    <script src="/phoenix/v1.20.1/vendors/is/is.min.js"></script>
+    <script src="/phoenix/v1.20.1/vendors/anchorjs/anchor.min.js"></script>
+    
+    <!-- Configuration (must be before Phoenix.js) -->
+    <script>
+      window.config = {
+        config: {
+          phoenixTheme: 'light',
+          phoenixNavbarPosition: 'vertical',
+          phoenixNavbarVerticalStyle: 'default',
+          phoenixNavbarTopShape: 'default',
+          phoenixNavbarTopStyle: 'default',
+          phoenixIsRTL: false,
+          phoenixSupportChat: false
+        },
+        set: function(key, value) {
+          this.config[key] = value;
+        },
+        reset: function() {
+          this.config = {
+            phoenixTheme: 'light',
+            phoenixNavbarPosition: 'vertical',
+            phoenixNavbarVerticalStyle: 'default',
+            phoenixNavbarTopShape: 'default',
+            phoenixNavbarTopStyle: 'default',
+            phoenixIsRTL: false,
+            phoenixSupportChat: false
+          };
+        }
+      };
+    </script>
+    
+    <!-- Set Phoenix config theme from localStorage before Phoenix loads -->
+    <script>
+      var theme = localStorage.getItem('theme');
+      if (theme) {
+        window.config = window.config || { config: {} };
+        window.config.config.phoenixTheme = theme;
+        document.documentElement.setAttribute('data-theme', theme);
+      }
+    </script>
+    <!-- Phoenix Core -->
+    <script src="/phoenix/v1.20.1/assets/js/phoenix.js"></script>
+    <!-- No theme script at end of <body> -->
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
