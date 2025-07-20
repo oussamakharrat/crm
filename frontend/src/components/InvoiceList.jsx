@@ -26,19 +26,6 @@ const InvoiceList = ({ token }) => {
     setLoading(false);
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Delete this invoice?')) {
-      try {
-        await axios.delete(`${API_URL}/invoices/${id}`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        fetchInvoices();
-      } catch {
-        alert('Failed to delete invoice');
-      }
-    }
-  };
-
   return (
     <div>
       <h2>Invoices</h2>
@@ -62,26 +49,29 @@ const InvoiceList = ({ token }) => {
           <tbody>
             {invoices.map(inv => (
               <tr key={inv.id}>
-                <td>{inv.invoice_number}</td>
+                <td>
+                  {(() => {
+                    const url = inv.pdf_path || inv.file || inv.url;
+                    return url ? (
+                      <a
+                        href={url.startsWith('http') ? url : `http://localhost:5000${url}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}
+                        onClick={e => e.stopPropagation()}
+                      >
+                        {inv.invoice_number}
+                      </a>
+                    ) : (
+                      inv.invoice_number
+                    );
+                  })()}
+                </td>
                 <td>{inv.deal_id}</td>
                 <td>{inv.contact_id}</td>
                 <td>{inv.amount}</td>
                 <td>{inv.total}</td>
                 <td>{inv.issue_date}</td>
-                <td>
-                  <button onClick={() => handleDelete(inv.id)}>Delete</button>
-                  {inv.pdf_path && (
-                    <a
-                      href={`http://localhost:5000${inv.pdf_path}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ marginLeft: '8px' }}
-                      download
-                    >
-                      Download PDF
-                    </a>
-                  )}
-                </td>
               </tr>
             ))}
           </tbody>

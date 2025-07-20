@@ -102,13 +102,13 @@ const AdminRolePanel = () => {
   if (loading) return <div className="text-center my-5">Loading...</div>;
 
   return (
-    <div className="row g-3 mb-4" style={{ background: 'var(--phoenix-body-bg)', color: 'var(--phoenix-body-color)' }}>
+    <div className="row g-3 mb-4" >
       <div className="col-12">
-        <div className="card" style={{ background: 'var(--phoenix-card-bg)', color: 'var(--phoenix-card-color)' }}>
-          <div className="card-header" style={{ background: 'var(--phoenix-card-header-bg)', color: 'var(--phoenix-card-header-color)' }}>
+        <div className="card" >
+          <div className="card-header">
             <h5 className="mb-0">User Role Management</h5>
           </div>
-          <div className="card-body" style={{ background: 'var(--phoenix-card-bg)', color: 'var(--phoenix-card-color)' }}>
+          <div className="card-body" >
             <div className="row g-3">
               <div className="col-lg-8">
                 <div className="table-responsive scrollbar mx-n1 px-1">
@@ -155,7 +155,7 @@ const AdminRolePanel = () => {
                     <h6 className="mb-0">Users by Role</h6>
                   </div>
                   <div className="card-body">
-                    <div ref={chartRef} style={{ width: '100%', height: 300 }}></div>
+                    <div ref={chartRef}></div>
                   </div>
                 </div>
               </div>

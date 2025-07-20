@@ -19,11 +19,10 @@ const Login = () => {
       const res = await login(email, password);
       console.log('Login response:', res);
       if (res && res.status === 200 && res.data && res.data.id) {
-        // Store the token in localStorage
-        if (res.data.token) {
-          localStorage.setItem('token', res.data.token);
-        }
-        authLogin(res.data);
+        // Ensure the user object always has the token property
+        const userWithToken = { ...res.data, token: res.data.token || localStorage.getItem('token') };
+        localStorage.setItem('token', userWithToken.token);
+        authLogin(userWithToken);
         navigate("/dashboard");
       } else {
         setError("Invalid email or password");

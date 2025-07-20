@@ -24,11 +24,9 @@ const Leads = () => {
   // const { theme } = useContext(ThemeContext); // theme is not used
   const [search, setSearch] = useState("");
 
-  // Get current theme from document.documentElement
-  const [currentTheme, setCurrentTheme] = useState(document.documentElement.getAttribute('data-theme') || 'light');
   useEffect(() => {
     const observer = new MutationObserver(() => {
-      setCurrentTheme(document.documentElement.getAttribute('data-theme') || 'light');
+      // setCurrentTheme(document.documentElement.getAttribute('data-theme') || 'light'); // This line was removed
     });
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
     return () => observer.disconnect();
@@ -111,11 +109,11 @@ const Leads = () => {
     <div className="container-fluid px-0 px-md-3">
       {/* Modal for Add Lead */}
       {showModal && (
-        <div className="modal fade show d-block" tabIndex="-1" role="dialog" style={{ background: currentTheme === 'dark' ? "rgba(15,20,25,0.85)" : "rgba(0,0,0,0.5)", zIndex: 1050 }}>
+        <div className="modal fade show d-block" tabIndex="-1" role="dialog">
           <div className="modal-dialog" role="document">
-            <div className="modal-content" style={currentTheme === 'dark' ? { background: 'var(--phoenix-card-bg)', color: 'var(--phoenix-card-color)', borderColor: 'var(--phoenix-card-border-color)' } : {}}>
-              <div className="modal-header" style={currentTheme === 'dark' ? { background: 'var(--phoenix-card-header-bg)', color: 'var(--phoenix-card-header-color)', borderBottom: '1px solid var(--phoenix-card-border-color)' } : {}}>
-                <h5 className="modal-title" style={currentTheme === 'dark' ? { color: 'var(--phoenix-card-header-color)' } : {}}>Add Lead</h5>
+            <div className="modal-content">
+              <div className="modal-header" >
+                <h5 className="modal-title" >Add Lead</h5>
                 <button type="button" className="btn-close" onClick={handleCloseModal}></button>
               </div>
               <form onSubmit={handleSubmit}>
@@ -162,7 +160,7 @@ const Leads = () => {
                   )}
                   {formError && <div className="alert alert-danger">{formError}</div>}
                 </div>
-                <div className="modal-footer" style={currentTheme === 'dark' ? { background: 'var(--phoenix-card-header-bg)', color: 'var(--phoenix-card-header-color)', borderTop: '1px solid var(--phoenix-card-border-color)' } : {}}>
+                <div className="modal-footer" >
                   <button type="button" className="btn btn-secondary" onClick={handleCloseModal}>Cancel</button>
                   <button type="submit" className="btn btn-primary">Add Lead</button>
                 </div>
@@ -192,7 +190,7 @@ const Leads = () => {
                 <button className="btn btn-primary me-4" onClick={handleOpenModal}>
                   <span className="fas fa-plus me-2"></span>Create Lead
                 </button>
-                <button className="btn btn-link text-body px-0">
+                <button className="btn btn-link text-body px-0" type="button">
                   <span className="fa-solid fa-file-export fs-9 me-2"></span>Export
                 </button>
               </div>
@@ -228,17 +226,17 @@ const Leads = () => {
             <table className="table fs-9 mb-0 leads-table border-top border-translucent">
               <thead>
                 <tr>
-                  <th className="white-space-nowrap fs-9 align-middle ps-0" style={{maxWidth: '20px', width: '18px'}}>
+                  <th className="white-space-nowrap fs-9 align-middle ps-0" >
                     <div className="form-check mb-0 fs-8">
                       <input className="form-check-input" type="checkbox" />
                     </div>
                   </th>
-                  <th className="sort white-space-nowrap align-middle text-uppercase ps-0" scope="col" style={{width: '25%'}}>Name</th>
-                  <th className="sort align-middle ps-4 pe-5 text-uppercase border-end border-translucent" scope="col" style={{width: '15%'}}>Email</th>
-                  <th className="sort align-middle ps-4 pe-5 text-uppercase border-end border-translucent" scope="col" style={{width: '15%', minWidth: '180px'}}>Phone</th>
-                  <th className="sort align-middle ps-4 pe-5 text-uppercase border-end border-translucent" scope="col" style={{width: '15%'}}>Status</th>
-                  <th className="sort align-middle ps-4 pe-5 text-uppercase border-end border-translucent" scope="col" style={{width: '15%'}}>Company</th>
-                  <th className="sort align-middle ps-4 pe-5 text-uppercase" scope="col" style={{width: '15%'}}>Assigned To</th>
+                  <th className="sort white-space-nowrap align-middle text-uppercase ps-0" scope="col" >Name</th>
+                  <th className="sort align-middle ps-4 pe-5 text-uppercase border-end border-translucent" scope="col" >Email</th>
+                  <th className="sort align-middle ps-4 pe-5 text-uppercase border-end border-translucent" scope="col" >Phone</th>
+                  <th className="sort align-middle ps-4 pe-5 text-uppercase border-end border-translucent" scope="col" >Status</th>
+                  <th className="sort align-middle ps-4 pe-5 text-uppercase border-end border-translucent" scope="col" >Company</th>
+                  <th className="sort align-middle ps-4 pe-5 text-uppercase" scope="col" >Assigned To</th>
                   <th className="sort text-end align-middle pe-0 ps-4" scope="col"></th>
                 </tr>
               </thead>
@@ -276,8 +274,8 @@ const Leads = () => {
                       {lead.assigned_to}
                     </td>
                     <td className="align-middle white-space-nowrap text-end pe-0 ps-4">
-                      <div className="btn-reveal-trigger position-static">
-                        <button className="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown">
+                      <div className="btn-reveal-trigger position-static dropdown">
+                        <button className="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           <span className="fas fa-ellipsis-h fs-10"></span>
                         </button>
                         <div className="dropdown-menu dropdown-menu-end py-2">

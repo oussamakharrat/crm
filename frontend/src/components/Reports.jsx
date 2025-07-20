@@ -90,7 +90,7 @@ const Reports = () => {
           <li className="breadcrumb-item active">Overview</li>
         </ol>
       </nav>
-      <div className="pb-6" style={mainStyle}>
+      <div className="pb-6" >
         <h2 className="mb-4">Reports</h2>
         <div className="row g-3 justify-content-between mb-4">
           <div className="col-auto">
@@ -121,7 +121,7 @@ const Reports = () => {
         </div>
         {/* Cards for the first 3 reports, fallback to static if not enough */}
         {showAddForm && (
-          <div className="card mb-4" style={cardStyle}>
+          <div className="card mb-4" >
             <div className="card-body">
               <h5 className="card-title mb-3">Add New Report</h5>
               {error && <div className="alert alert-danger">{error}</div>}
@@ -174,8 +174,8 @@ const Reports = () => {
             { name: "Revenue Growth", type: "Revenue", description: "", parameters: {}, status: "Completed" }
           ]).map((report, idx) => (
             <div className="col-sm-6 col-md-4" key={idx}>
-              <div className="card overflow-hidden" style={{ minWidth: '12rem', backgroundColor: 'var(--phoenix-card-bg) !important', color: 'var(--phoenix-card-color) !important', borderColor: 'var(--phoenix-card-border-color) !important' }}>
-                <div className="bg-holder bg-card" style={{backgroundImage: `url(/phoenix-assets/assets/img/icons/spot-illustrations/corner-${(idx%3)+1}.png)`}}></div>
+              <div className="card overflow-hidden" >
+                <div className="bg-holder bg-card" ></div>
                 <div className="card-body position-relative">
                   <h6>{report.name}</h6>
                   <div className="display-4 fs-4 fw-normal font-sans-serif text-info">{report.type || '--'}</div>
@@ -185,16 +185,16 @@ const Reports = () => {
             </div>
           ))}
         </div>
-        <div className="card" style={cardStyle}>
-          <div className="card-header" style={{ backgroundColor: 'var(--phoenix-card-header-bg) !important', color: 'var(--phoenix-card-header-color) !important', borderBottom: '1px solid var(--phoenix-card-border-color) !important' }}>
+        <div className="card" >
+          <div className="card-header" >
             <h5 className="mb-0">Recent Reports</h5>
           </div>
-          <div className="card-body" style={cardStyle}>
+          <div className="card-body">
             {loading ? (
               <div>Loading...</div>
             ) : (
               <div className="table-responsive">
-                <table className="table table-hover" style={tableStyle}>
+                <table className="table table-hover" >
                   <thead>
                     <tr>
                       <th>Report Name</th>

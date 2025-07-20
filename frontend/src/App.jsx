@@ -7,9 +7,8 @@ import Contacts from "./components/Contacts";
 import Deals from "./components/Deals";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
-import { AuthProvider } from "./AuthContext";
-import { ThemeProvider } from "./ThemeContext";
-import { useAuth } from "./hooks/useAuth";
+import { AuthProvider } from "../src/AuthContext";
+import { ThemeProvider } from "../src/ThemeContext";
 import Leads from "./components/Leads";
 import Reports from "./components/Reports";
 import Analytics from "./components/Analytics";
@@ -19,41 +18,33 @@ import LeadDetails from "./components/LeadDetails";
 import ReportDetails from "./components/ReportDetails";
 import Profile from "./components/Profile";
 import InvoiceList from './components/InvoiceList';
-import './App.css';
+import PrivateRoute from './components/PrivateRoute';
+import { useAuth } from "./hooks/useAuth";
 
 const MainApp = () => {
-  const { user } = useAuth();
-
-  if (!user) {
-    return (
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
-      </Routes>
-    );
-  }
-
+  const { user, loading } = useAuth();
   return (
-    <main className="main d-flex" id="top" style={{ height: '100vh', minHeight: '100vh' }}>
-      <Sidebar />
-      <div className="content d-flex flex-column flex-grow-1 container-fluid px-4" style={{ minHeight: '100vh' }}>
-        <Header />
-        <div className="main-content-area flex-grow-1 d-flex flex-column" style={{ minHeight: 0 }}>
+    <main className="main d-flex" id="top">
+      {user && !loading && <Sidebar />}
+      {user && !loading && <Header />}
+      <div className="content d-flex flex-column flex-grow-1 container-fluid px-4">
+        <div className="main-content-area flex-grow-1 d-flex flex-column">
           <Routes>
-            <Route path="/dashboard" element={<RoleBasedDashboard />} />
-            <Route path="/contacts" element={<Contacts />} />
-            <Route path="/deals" element={<Deals />} />
-            <Route path="/leads" element={<Leads />} />
-            <Route path="/reports" element={<Reports />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/add-contact" element={<AddContact />} />
-            <Route path="/deal-details/:id" element={<DealDetails />} />
-            <Route path="/lead-details/:id" element={<LeadDetails />} />
-            <Route path="/report-details/:id" element={<ReportDetails />} />
-            <Route path="/report-details" element={<ReportDetails />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/invoices" element={<InvoiceList />} />
+            <Route path="/dashboard" element={<PrivateRoute><RoleBasedDashboard /></PrivateRoute>} />
+            <Route path="/contacts" element={<PrivateRoute><Contacts /></PrivateRoute>} />
+            <Route path="/deals" element={<PrivateRoute><Deals /></PrivateRoute>} />
+            <Route path="/leads" element={<PrivateRoute><Leads /></PrivateRoute>} />
+            <Route path="/reports" element={<PrivateRoute><Reports /></PrivateRoute>} />
+            <Route path="/analytics" element={<PrivateRoute><Analytics /></PrivateRoute>} />
+            <Route path="/add-contact" element={<PrivateRoute><AddContact /></PrivateRoute>} />
+            <Route path="/deal-details/:id" element={<PrivateRoute><DealDetails /></PrivateRoute>} />
+            <Route path="/lead-details/:id" element={<PrivateRoute><LeadDetails /></PrivateRoute>} />
+            <Route path="/report-details/:id" element={<PrivateRoute><ReportDetails /></PrivateRoute>} />
+            <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+            <Route path="/invoices" element={<PrivateRoute><InvoiceList /></PrivateRoute>} />
+            {/* Public routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </div>

@@ -1,11 +1,20 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import 'bootstrap/dist/js/bootstrap.bundle.min.js'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.jsx";
+import { ThemeProvider } from "./ThemeContext";
+import { AuthProvider } from "./AuthContext";
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+// Add your CSS imports back one by one:
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../public/phoenix/v1.20.1/assets/css/theme.min.css';
+import '../public/phoenix/v1.20.1/assets/css/user.min.css';
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <ThemeProvider>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </ThemeProvider>
+  </React.StrictMode>
+);

@@ -12,7 +12,7 @@ const SalesDashboard = () => {
           <h5 className="text-body-tertiary fw-semibold mb-4">Track your sales performance and leads</h5>
           <div className="row g-3 mb-3">
             <div className="col-sm-6 col-md-4 col-xl-3 col-xxl-4">
-              <div className="card h-100" style={{ backgroundColor: 'var(--phoenix-card-bg) !important', color: 'var(--phoenix-card-color) !important', borderColor: 'var(--phoenix-card-border-color) !important' }}>
+              <div className="card h-100 bg-card">
                 <div className="card-body">
                   <div className="d-flex d-sm-block justify-content-between">
                     <div className="mb-3">
@@ -31,7 +31,7 @@ const SalesDashboard = () => {
               </div>
             </div>
             <div className="col-sm-6 col-md-4 col-xl-3 col-xxl-4">
-              <div className="card h-100" style={{ backgroundColor: 'var(--phoenix-card-bg) !important', color: 'var(--phoenix-card-color) !important', borderColor: 'var(--phoenix-card-border-color) !important' }}>
+              <div className="card h-100 bg-card">
                 <div className="card-body">
                   <div className="d-flex d-sm-block justify-content-between">
                     <div className="mb-3">
@@ -50,7 +50,7 @@ const SalesDashboard = () => {
               </div>
             </div>
             <div className="col-sm-6 col-md-4 col-xl-3 col-xxl-4">
-              <div className="card h-100" style={{ backgroundColor: 'var(--phoenix-card-bg) !important', color: 'var(--phoenix-card-color) !important', borderColor: 'var(--phoenix-card-border-color) !important' }}>
+              <div className="card h-100 bg-card">
                 <div className="card-body">
                   <div className="d-flex d-sm-block justify-content-between">
                     <div className="mb-3">
@@ -69,7 +69,7 @@ const SalesDashboard = () => {
               </div>
             </div>
             <div className="col-sm-6 col-md-4 col-xl-3 col-xxl-4">
-              <div className="card h-100" style={{ backgroundColor: 'var(--phoenix-card-bg) !important', color: 'var(--phoenix-card-color) !important', borderColor: 'var(--phoenix-card-border-color) !important' }}>
+              <div className="card h-100 bg-card">
                 <div className="card-body">
                   <div className="d-flex d-sm-block justify-content-between">
                     <div className="mb-3">
@@ -94,8 +94,8 @@ const SalesDashboard = () => {
       {/* Recent Deals Section */}
       <div className="row g-3 mb-4">
         <div className="col-12">
-          <div className="card" style={{ backgroundColor: 'var(--phoenix-card-bg) !important', color: 'var(--phoenix-card-color) !important', borderColor: 'var(--phoenix-card-border-color) !important' }}>
-            <div className="card-header" style={{ backgroundColor: 'var(--phoenix-card-header-bg) !important', color: 'var(--phoenix-card-header-color) !important', borderBottom: '1px solid var(--phoenix-card-border-color) !important' }}>
+          <div className="card bg-card">
+            <div className="card-header bg-card-header border-bottom border-card-border">
               <h5 className="mb-0">Recent Deals</h5>
             </div>
             <div className="card-body">
@@ -183,32 +183,32 @@ const SalesDashboard = () => {
       {/* Sales Pipeline */}
       <div className="row g-3 mb-4">
         <div className="col-12">
-          <div className="card" style={{ backgroundColor: 'var(--phoenix-card-bg) !important', color: 'var(--phoenix-card-color) !important', borderColor: 'var(--phoenix-card-border-color) !important' }}>
-            <div className="card-header" style={{ backgroundColor: 'var(--phoenix-card-header-bg) !important', color: 'var(--phoenix-card-header-color) !important', borderBottom: '1px solid var(--phoenix-card-border-color) !important' }}>
+          <div className="card bg-card">
+            <div className="card-header bg-card-header border-bottom border-card-border">
               <h5 className="mb-0">Sales Pipeline</h5>
             </div>
             <div className="card-body">
               <div className="row g-3">
                 <div className="col-md-3">
-                  <div className="text-center p-3 border rounded-3" style={{ background: 'var(--phoenix-card-bg)', color: 'var(--phoenix-card-color)' }}>
+                  <div className="text-center p-3 border rounded-3 bg-body">
                     <h4 className="text-primary mb-1">12</h4>
                     <p className="mb-0 fs-9 text-body-tertiary">Qualified Leads</p>
                   </div>
                 </div>
                 <div className="col-md-3">
-                  <div className="text-center p-3 border rounded-3" style={{ background: 'var(--phoenix-card-bg)', color: 'var(--phoenix-card-color)' }}>
+                  <div className="text-center p-3 border rounded-3 bg-body">
                     <h4 className="text-warning mb-1">8</h4>
                     <p className="mb-0 fs-9 text-body-tertiary">Proposals</p>
                   </div>
                 </div>
                 <div className="col-md-3">
-                  <div className="text-center p-3 border rounded-3" style={{ background: 'var(--phoenix-card-bg)', color: 'var(--phoenix-card-color)' }}>
+                  <div className="text-center p-3 border rounded-3 bg-body">
                     <h4 className="text-info mb-1">5</h4>
                     <p className="mb-0 fs-9 text-body-tertiary">Negotiation</p>
                   </div>
                 </div>
                 <div className="col-md-3">
-                  <div className="text-center p-3 border rounded-3" style={{ background: 'var(--phoenix-card-bg)', color: 'var(--phoenix-card-color)' }}>
+                  <div className="text-center p-3 border rounded-3 bg-body">
                     <h4 className="text-success mb-1">3</h4>
                     <p className="mb-0 fs-9 text-body-tertiary">Closed Won</p>
                   </div>
@@ -222,8 +222,8 @@ const SalesDashboard = () => {
       {/* Quick Actions */}
       <div className="row g-3">
         <div className="col-lg-6">
-          <div className="card" style={{ backgroundColor: 'var(--phoenix-card-bg) !important', color: 'var(--phoenix-card-color) !important', borderColor: 'var(--phoenix-card-border-color) !important' }}>
-            <div className="card-header" style={{ backgroundColor: 'var(--phoenix-card-header-bg) !important', color: 'var(--phoenix-card-header-color) !important', borderBottom: '1px solid var(--phoenix-card-border-color) !important' }}>
+          <div className="card bg-card">
+            <div className="card-header bg-card-header border-bottom border-card-border">
               <h5 className="mb-0">Quick Actions</h5>
             </div>
             <div className="card-body">
@@ -245,8 +245,8 @@ const SalesDashboard = () => {
           </div>
         </div>
         <div className="col-lg-6">
-          <div className="card" style={{ backgroundColor: 'var(--phoenix-card-bg) !important', color: 'var(--phoenix-card-color) !important', borderColor: 'var(--phoenix-card-border-color) !important' }}>
-            <div className="card-header" style={{ backgroundColor: 'var(--phoenix-card-header-bg) !important', color: 'var(--phoenix-card-header-color) !important', borderBottom: '1px solid var(--phoenix-card-border-color) !important' }}>
+          <div className="card bg-card">
+            <div className="card-header bg-card-header border-bottom border-card-border">
               <h5 className="mb-0">Your Permissions</h5>
             </div>
             <div className="card-body">

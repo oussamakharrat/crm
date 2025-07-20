@@ -1,221 +1,127 @@
 import React from "react";
 import { useAuth } from "../hooks/useAuth";
 import AdminRolePanel from "./AdminRolePanel";
-import { ThemeContext } from "../ThemeContext";
 
 const AdminDashboard = () => {
   const { roles, permissions } = useAuth();
 
-  // Theme variable styles for cards
-  const cardStyle = {
-    background: 'var(--phoenix-card-bg)',
-    color: 'var(--phoenix-card-color)',
-    borderColor: 'var(--phoenix-card-border-color)'
-  };
-  const cardHeaderStyle = {
-    background: 'var(--phoenix-card-header-bg)',
-    color: 'var(--phoenix-card-header-color)',
-    borderBottom: '1px solid var(--phoenix-card-border-color)'
-  };
-  const cardBodyStyle = {
-    background: 'var(--phoenix-card-bg)',
-    color: 'var(--phoenix-card-color)'
-  };
-
   return (
-    <div className="content" style={{ background: 'var(--phoenix-body-bg)', color: 'var(--phoenix-body-color)' }}>
-      <div className="row gy-3 mb-4 justify-content-between" style={{ background: 'var(--phoenix-body-bg)', color: 'var(--phoenix-body-color)' }}>
+    <div className="content">
+      <div className="row gy-3 mb-4 justify-content-between">
         <div className="col-xxl-6">
-          <h2 className="mb-2 text-body-emphasis" style={{ color: 'var(--phoenix-body-color)' }}>Admin Dashboard</h2>
-          <h5 className="text-body-tertiary fw-semibold mb-4" style={{ color: 'var(--phoenix-body-color)' }}>System administration and management</h5>
+          <h2 className="mb-2 text-body-emphasis">CRM Dashboard</h2>
+          <h5 className="text-body-tertiary fw-semibold mb-4">Check your business growth in one place</h5>
           <div className="row g-3 mb-3">
             <div className="col-sm-6 col-md-4 col-xl-3 col-xxl-4">
-              <div className="card h-100" style={cardStyle}>
-                <div className="card-body" style={cardBodyStyle}>
+              <div className="card h-100">
+                <div className="card-body">
                   <div className="d-flex d-sm-block justify-content-between">
-                    <div className="mb-3">
-                      <h6 className="fw-bold fs-5 d-flex align-items-center mb-2">
-                        <span className="fas fa-users text-primary me-2"></span>
-                        Total Users
-                      </h6>
-                      <h4 className="fw-bold text-primary mb-2">1,247</h4>
-                      <p className="fs-9 mb-0 fw-semibold text-body-tertiary">
-                        <span className="fas fa-arrow-up text-success me-1"></span>
-                        12.5% from last month
-                      </p>
+                    <div className="border-bottom-sm border-translucent mb-sm-4">
+                      <div className="d-flex align-items-center">
+                        <div className="d-flex align-items-center icon-wrapper-sm shadow-primary-100" style={{transform: 'rotate(-7.45deg)'}}><span className="fa-solid fa-phone-alt text-primary fs-7 z-1 ms-2"></span></div>
+                        <p className="text-body-tertiary fs-9 mb-0 ms-2 mt-3">Outgoing call</p>
+                      </div>
+                      <p className="text-primary mt-2 fs-6 fw-bold mb-0 mb-sm-4">3 <span className="fs-8 text-body lh-lg">Leads Today</span></p>
+                    </div>
+                    <div className="d-flex flex-column justify-content-center flex-between-end d-sm-block text-end text-sm-start"><span className="badge badge-phoenix badge-phoenix-success fs-10 mb-2">+24.5%</span>
+                      <p className="mb-0 fs-9 text-body-tertiary">Than Yesterday</p>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             <div className="col-sm-6 col-md-4 col-xl-3 col-xxl-4">
-              <div className="card h-100" style={cardStyle}>
-                <div className="card-body" style={cardBodyStyle}>
+              <div className="card h-100">
+                <div className="card-body">
                   <div className="d-flex d-sm-block justify-content-between">
-                    <div className="mb-3">
-                      <h6 className="fw-bold fs-5 d-flex align-items-center mb-2">
-                        <span className="fas fa-user-shield text-warning me-2"></span>
-                        Active Roles
-                      </h6>
-                      <h4 className="fw-bold text-warning mb-2">2</h4>
-                      <p className="fs-9 mb-0 fw-semibold text-body-tertiary">
-                        <span className="fas fa-arrow-up text-success me-1"></span>
-                        Roles assigned
-                      </p>
+                    <div className="border-bottom-sm border-translucent mb-sm-4">
+                      <div className="d-flex align-items-center">
+                        <div className="d-flex align-items-center icon-wrapper-sm shadow-info-100" style={{transform: 'rotate(-7.45deg)'}}><span className="fa-solid fa-calendar text-info fs-7 z-1 ms-2"></span></div>
+                        <p className="text-body-tertiary fs-9 mb-0 ms-2 mt-3">Outgoing meeting</p>
+                      </div>
+                      <p className="text-info mt-2 fs-6 fw-bold mb-0 mb-sm-4">12 <span className="fs-8 text-body lh-lg">This Week</span></p>
+                    </div>
+                    <div className="d-flex flex-column justify-content-center flex-between-end d-sm-block text-end text-sm-start"><span className="badge badge-phoenix badge-phoenix-warning fs-10 mb-2">+24.5%</span>
+                      <p className="mb-0 fs-9 text-body-tertiary">Than last week</p>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="col-sm-6 col-md-4 col-xl-3 col-xxl-4">
-              <div className="card h-100" style={cardStyle}>
-                <div className="card-body" style={cardBodyStyle}>
-                  <div className="d-flex d-sm-block justify-content-between">
-                    <div className="mb-3">
-                      <h6 className="fw-bold fs-5 d-flex align-items-center mb-2">
-                        <span className="fas fa-key text-info me-2"></span>
-                        Permissions
-                      </h6>
-                      <h4 className="fw-bold text-info mb-2">23</h4>
-                      <p className="fs-9 mb-0 fw-semibold text-body-tertiary">
-                        <span className="fas fa-arrow-up text-success me-1"></span>
-                        Permissions granted
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col-sm-6 col-md-4 col-xl-3 col-xxl-4">
-              <div className="card h-100" style={cardStyle}>
-                <div className="card-body" style={cardBodyStyle}>
-                  <div className="d-flex d-sm-block justify-content-between">
-                    <div className="mb-3">
-                      <h6 className="fw-bold fs-5 d-flex align-items-center mb-2">
-                        <span className="fas fa-chart-line text-success me-2"></span>
-                        System Health
-                      </h6>
-                      <h4 className="fw-bold text-success mb-2">98.5%</h4>
-                      <p className="fs-9 mb-0 fw-semibold text-body-tertiary">
-                        <span className="fas fa-arrow-up text-success me-1"></span>
-                        Excellent performance
-                      </p>
-                    </div>
-                  </div>
-                </div>
+            <div className="col-md-4 col-xl-6 col-xxl-4 gy-5 gy-md-3">
+              <div className="border-bottom border-translucent">
+                <h5 className="pb-4 border-bottom border-translucent">Top 5 Lead Sources</h5>
+                <ul className="list-group list-group-flush">
+                  <li className="list-group-item d-flex justify-content-between align-items-center bg-transparent list-group-crm fw-bold text-body fs-9 py-2">
+                    <span className="fw-normal fs-9 mx-1"><span className="fw-bold">1. </span>None </span><span>(65)</span>
+                  </li>
+                  <li className="list-group-item d-flex justify-content-between align-items-center bg-transparent list-group-crm fw-bold text-body fs-9 py-2">
+                    <span className="fw-normal mx-1"><span className="fw-bold">2. </span>Online Store</span><span>(74)</span>
+                  </li>
+                  <li className="list-group-item d-flex justify-content-between align-items-center bg-transparent list-group-crm fw-bold text-body fs-9 py-2">
+                    <span className="fw-normal fs-9 mx-1"><span className="fw-bold">3.</span> Advertisement</span><span>(32)</span>
+                  </li>
+                  <li className="list-group-item d-flex justify-content-between align-items-center bg-transparent list-group-crm fw-bold text-body fs-9 py-2">
+                    <span className="fw-normal fs-9 mx-1"><span className="fw-bold">4.</span> Seminar Partner</span><span>(25)</span>
+                  </li>
+                  <li className="list-group-item d-flex justify-content-between align-items-center bg-transparent list-group-crm fw-bold text-body fs-9 py-2">
+                    <span className="fw-normal fs-9 mx-1"><span className="fw-bold">5.</span> Partner</span><span>(23)</span>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
         </div>
+        {/* Example of dynamic section for roles/permissions, can be placed as needed */}
+        <div className="row g-3 mb-4">
+          <div className="col-12">
+            <div className="card">
+              <div className="card-header">
+                <h5 className="mb-0">Your Roles</h5>
+              </div>
+              <div className="card-body">
+                {roles.length > 0 ? (
+                  <div className="d-flex flex-wrap gap-2">
+                    {roles.map((role, index) => (
+                      <span key={index} className="badge bg-primary fs-9">
+                        {role.name || role}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-body-tertiary mb-0">No roles assigned</p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="row g-3 mb-4">
+          <div className="col-12">
+            <div className="card">
+              <div className="card-header">
+                <h5 className="mb-0">Your Permissions</h5>
+              </div>
+              <div className="card-body">
+                {permissions.length > 0 ? (
+                  <div className="d-flex flex-wrap gap-2">
+                    {permissions.map((permission, index) => (
+                      <span key={index} className="badge bg-success fs-9">
+                        {permission}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-body-tertiary mb-0">No permissions granted</p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* Admin Role Management Section - Only for Admins */}
+        {roles.some(role => (typeof role === 'string' && role.toLowerCase() === 'admin') || (typeof role === 'object' && role.name && role.name.toLowerCase() === 'admin')) && (
+          <AdminRolePanel />
+        )}
       </div>
-
-      {/* Admin Management Section */}
-      <div className="row g-3 mb-4" style={{ background: 'var(--phoenix-body-bg)', color: 'var(--phoenix-body-color)' }}>
-        <div className="col-12">
-          <div className="card" style={cardStyle}>
-            <div className="card-header" style={cardHeaderStyle}>
-              <h5 className="mb-0">System Management</h5>
-            </div>
-            <div className={`card-body`} style={cardBodyStyle}>
-              <div className="row g-3">
-                <div className="col-md-6 col-lg-3">
-                  <div className="d-flex align-items-center p-3 border rounded-3" style={cardBodyStyle}>
-                    <div className="flex-shrink-0">
-                      <span className="fas fa-user-plus fs-3 text-primary"></span>
-                    </div>
-                    <div className="flex-grow-1 ms-3">
-                      <h6 className="mb-1">User Management</h6>
-                      <p className="mb-0 fs-9 text-body-tertiary">Manage users and roles</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-md-6 col-lg-3">
-                  <div className="d-flex align-items-center p-3 border rounded-3" style={cardBodyStyle}>
-                    <div className="flex-shrink-0">
-                      <span className="fas fa-shield-alt fs-3 text-warning"></span>
-                    </div>
-                    <div className="flex-grow-1 ms-3">
-                      <h6 className="mb-1">Role Management</h6>
-                      <p className="mb-0 fs-9 text-body-tertiary">Configure user roles</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-md-6 col-lg-3">
-                  <div className="d-flex align-items-center p-3 border rounded-3" style={cardBodyStyle}>
-                    <div className="flex-shrink-0">
-                      <span className="fas fa-cogs fs-3 text-info"></span>
-                    </div>
-                    <div className="flex-grow-1 ms-3">
-                      <h6 className="mb-1">System Settings</h6>
-                      <p className="mb-0 fs-9 text-body-tertiary">Configure system options</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-md-6 col-lg-3">
-                  <div className="d-flex align-items-center p-3 border rounded-3" style={cardBodyStyle}>
-                    <div className="flex-shrink-0">
-                      <span className="fas fa-database fs-3 text-success"></span>
-                    </div>
-                    <div className="flex-grow-1 ms-3">
-                      <h6 className="mb-1">Database</h6>
-                      <p className="mb-0 fs-9 text-body-tertiary">Database management</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* User Roles and Permissions Display */}
-      <div className="row g-3" style={{ background: 'var(--phoenix-body-bg)', color: 'var(--phoenix-body-color)' }}>
-        <div className="col-lg-6">
-          <div className="card" style={cardStyle}>
-            <div className="card-header" style={cardHeaderStyle}>
-              <h5 className="mb-0">Your Roles</h5>
-            </div>
-            <div className="card-body" style={cardBodyStyle}>
-              {roles.length > 0 ? (
-                <div className="d-flex flex-wrap gap-2">
-                  {roles.map((role, index) => (
-                    <span key={index} className="badge bg-primary fs-9">
-                      {role.name || role}
-                    </span>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-body-tertiary mb-0">No roles assigned</p>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="col-lg-6">
-          <div className="card" style={cardStyle}>
-            <div className="card-header" style={cardHeaderStyle}>
-              <h5 className="mb-0">Your Permissions</h5>
-            </div>
-            <div className="card-body" style={cardBodyStyle}>
-              {permissions.length > 0 ? (
-                <div className="d-flex flex-wrap gap-2">
-                  {permissions.map((permission, index) => (
-                    <span key={index} className="badge bg-success fs-9">
-                      {permission}
-                    </span>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-body-tertiary mb-0">No permissions granted</p>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Admin Role Management Section - Only for Admins */}
-      {roles.some(role => (typeof role === 'string' && role.toLowerCase() === 'admin') || (typeof role === 'object' && role.name && role.name.toLowerCase() === 'admin')) && (
-        <AdminRolePanel />
-      )}
     </div>
   );
 };

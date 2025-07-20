@@ -186,20 +186,20 @@ const Analytics = () => {
         {/* Charts Row */}
         <div className="row g-3 mb-6">
           <div className="col-lg-4">
-            <div className="card" style={{ backgroundColor: 'var(--phoenix-card-bg) !important', color: 'var(--phoenix-card-color) !important', borderColor: 'var(--phoenix-card-border-color) !important' }}>
-              <div className="card-header" style={{ backgroundColor: 'var(--phoenix-card-header-bg) !important', color: 'var(--phoenix-card-header-color) !important', borderBottom: '1px solid var(--phoenix-card-border-color) !important' }}><h5 className="mb-0">Revenue Trend</h5></div>
+            <div className="card bg-card">
+              <div className="card-header bg-card-header border-bottom border-card-border"><h5 className="mb-0">Revenue Trend</h5></div>
               <div className="card-body"><div ref={lineChartRef} style={{height: 300, width: '100%'}}></div></div>
             </div>
           </div>
           <div className="col-lg-4">
-            <div className="card" style={{ backgroundColor: 'var(--phoenix-card-bg) !important', color: 'var(--phoenix-card-color) !important', borderColor: 'var(--phoenix-card-border-color) !important' }}>
-              <div className="card-header" style={{ backgroundColor: 'var(--phoenix-card-header-bg) !important', color: 'var(--phoenix-card-header-color) !important', borderBottom: '1px solid var(--phoenix-card-border-color) !important' }}><h5 className="mb-0">Deals Closed</h5></div>
+            <div className="card bg-card">
+              <div className="card-header bg-card-header border-bottom border-card-border"><h5 className="mb-0">Deals Closed</h5></div>
               <div className="card-body"><div ref={barChartRef} style={{height: 300, width: '100%'}}></div></div>
             </div>
           </div>
           <div className="col-lg-4">
-            <div className="card" style={{ backgroundColor: 'var(--phoenix-card-bg) !important', color: 'var(--phoenix-card-color) !important', borderColor: 'var(--phoenix-card-border-color) !important' }}>
-              <div className="card-header" style={{ backgroundColor: 'var(--phoenix-card-header-bg) !important', color: 'var(--phoenix-card-header-color) !important', borderBottom: '1px solid var(--phoenix-card-border-color) !important' }}><h5 className="mb-0">Leads by Status</h5></div>
+            <div className="card bg-card">
+              <div className="card-header bg-card-header border-bottom border-card-border"><h5 className="mb-0">Leads by Status</h5></div>
               <div className="card-body"><div ref={pieChartRef} style={{
                 height: 300,
                 width: '100%',
@@ -215,8 +215,8 @@ const Analytics = () => {
         {/* Summary Row */}
         <div className="row g-3 mb-6">
           <div className="col-lg-8">
-            <div className="card" style={{ backgroundColor: 'var(--phoenix-card-bg) !important', color: 'var(--phoenix-card-color) !important', borderColor: 'var(--phoenix-card-border-color) !important' }}>
-              <div className="card-header" style={{ backgroundColor: 'var(--phoenix-card-header-bg) !important', color: 'var(--phoenix-card-header-color) !important', borderBottom: '1px solid var(--phoenix-card-border-color) !important' }}><h5 className="mb-0">Revenue Overview</h5></div>
+            <div className="card bg-card">
+              <div className="card-header bg-card-header border-bottom border-card-border"><h5 className="mb-0">Revenue Overview</h5></div>
               <div className="card-body">
                 <div className="d-flex flex-wrap gap-4">
                   <div>
@@ -229,8 +229,8 @@ const Analytics = () => {
             </div>
           </div>
           <div className="col-lg-4">
-            <div className="card" style={{ backgroundColor: 'var(--phoenix-card-bg) !important', color: 'var(--phoenix-card-color) !important', borderColor: 'var(--phoenix-card-border-color) !important' }}>
-              <div className="card-header" style={{ backgroundColor: 'var(--phoenix-card-header-bg) !important', color: 'var(--phoenix-card-header-color) !important', borderBottom: '1px solid var(--phoenix-card-border-color) !important' }}><h5 className="mb-0">Top Performers</h5></div>
+            <div className="card bg-card">
+              <div className="card-header bg-card-header border-bottom border-card-border"><h5 className="mb-0">Top Performers</h5></div>
               <div className="card-body">
                 {/* Removed topPerformers display */}
               </div>

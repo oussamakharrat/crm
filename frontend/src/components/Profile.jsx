@@ -1,15 +1,18 @@
 import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../AuthContext";
-import { updateUserProfile, uploadAvatar, fetchCurrentUserProfile } from "../api";
-import { getLargeAvatarUrl } from "../utils/avatarUtils";
+import {
+  updateUserProfile,
+  uploadAvatar,
+  fetchCurrentUserProfile,
+} from "../api";
 
 const Profile = () => {
-  const { user, login } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
     address: "",
-    avatar: ""
+    avatar: "",
   });
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -17,44 +20,79 @@ const Profile = () => {
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
 
-  // Fetch current user profile from backend
   useEffect(() => {
+    let isMounted = true;
+    if (!user || !user.token) {
+      setFetching(false);
+      return;
+    }
+    setFetching(true);
     const fetchProfile = async () => {
-      if (!user?.token) {
-        setFetching(false);
-        return;
-      }
-
       try {
-        const response = await fetchCurrentUserProfile(user.token);
-        const profileData = response.data;
-        setFormData({
-          name: profileData.name || user.name || "",
-          phone: profileData.phone || user.phone || "",
-          address: profileData.address || user.address || "",
-          avatar: profileData.avatar || user.avatar || ""
-        });
-        // Do not update user context here, just prefill form
-      } catch (err) {
-        setFormData({
-          name: user.name || "",
-          phone: user.phone || "",
-          address: user.address || "",
-          avatar: user.avatar || ""
-        });
+        const { data: profileData } = await fetchCurrentUserProfile(user.token);
+        if (profileData && profileData.error) {
+          if (isMounted) {
+            setError(profileData.error);
+            setFetching(false);
+          }
+          return;
+        }
+        if (isMounted) {
+          setFormData((prev) => {
+            const newFormData = {
+              name: profileData?.name || user.name || "",
+              phone: profileData?.phone || user.phone || "",
+              address: profileData?.address || user.address || "",
+              avatar: profileData?.avatar || user.avatar || "",
+            };
+            // Only update if different
+            if (
+              prev.name !== newFormData.name ||
+              prev.phone !== newFormData.phone ||
+              prev.address !== newFormData.address ||
+              prev.avatar !== newFormData.avatar
+            ) {
+              return newFormData;
+            }
+            return prev;
+          });
+        }
+      } catch {
+        if (isMounted) {
+          setError("Failed to fetch profile. Please try again later.");
+          setFormData((prev) => {
+            const fallback = {
+              name: user.name || "",
+              phone: user.phone || "",
+              address: user.address || "",
+              avatar: user.avatar || "",
+            };
+            if (
+              prev.name !== fallback.name ||
+              prev.phone !== fallback.phone ||
+              prev.address !== fallback.address ||
+              prev.avatar !== fallback.avatar
+            ) {
+              return fallback;
+            }
+            return prev;
+          });
+        }
       } finally {
-        setFetching(false);
+        if (isMounted) setFetching(false);
       }
     };
-
     fetchProfile();
-  }, [user?.token, user?.id]);
+    return () => {
+      isMounted = false;
+    };
+  }, [user && user.token]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -65,18 +103,26 @@ const Profile = () => {
     setError(null);
 
     try {
-      const response = await updateUserProfile(user.token, formData);
-      
-      // Update the user context with new data
-      const updatedUser = {
-        ...user,
-        name: formData.name,
-        phone: formData.phone,
-        address: formData.address,
-        avatar: formData.avatar
-      };
-      
-      login(updatedUser);
+      await updateUserProfile(user.token, formData);
+
+      // Only update the user context if values have changed
+      setUser((prev) => {
+        if (
+          prev.name === formData.name &&
+          prev.phone === formData.phone &&
+          prev.address === formData.address &&
+          prev.avatar === formData.avatar
+        ) {
+          return prev;
+        }
+        return {
+          ...prev,
+          name: formData.name,
+          phone: formData.phone,
+          address: formData.address,
+          avatar: formData.avatar,
+        };
+      });
       setSuccess("Profile updated successfully!");
     } catch (err) {
       setError(err.response?.data?.error || "Failed to update profile");
@@ -96,11 +142,13 @@ const Profile = () => {
       const response = await uploadAvatar(user.token, file);
       // Only update formData, not user context or backend yet
       const newAvatarPath = response.data.avatar;
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        avatar: newAvatarPath
+        avatar: newAvatarPath,
       }));
-      setSuccess("Avatar uploaded successfully! (Don't forget to press 'Update Profile' to save changes.)");
+      setSuccess(
+        "Avatar uploaded successfully! (Don't forget to press 'Update Profile' to save changes.)"
+      );
     } catch (err) {
       setError(err.response?.data?.error || "Failed to upload avatar");
     } finally {
@@ -110,20 +158,33 @@ const Profile = () => {
 
   if (fetching) {
     return (
-      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
+      <div className="container-fluid px-0 px-md-3">
+        <div className="row justify-content-center">
+          <div className="col-md-6">
+            <div className="card shadow-sm p-4 my-5">
+              <div className="d-flex flex-column justify-content-center align-items-center" style={{ minHeight: "200px" }}>
+                <div className="spinner-border text-primary" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+                {error && <div className="alert alert-danger mt-4">{error}</div>}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container-fluid px-0 px-md-3">
+    <div style={{ width: '100%' }}>
       <nav className="mb-4" aria-label="breadcrumb">
         <ol className="breadcrumb mb-0">
-          <li className="breadcrumb-item"><a href="#">Dashboard</a></li>
-          <li className="breadcrumb-item"><a href="#">Profile</a></li>
+          <li className="breadcrumb-item">
+            <a href="#">Dashboard</a>
+          </li>
+          <li className="breadcrumb-item">
+            <a href="#">Profile</a>
+          </li>
           <li className="breadcrumb-item active">Edit Profile</li>
         </ol>
       </nav>
@@ -142,13 +203,25 @@ const Profile = () => {
                     <div className="avatar avatar-4xl me-4">
                       <img
                         className="rounded-circle"
-                        src={getLargeAvatarUrl(formData.avatar)}
+                        src={
+                          formData.avatar && formData.avatar.trim()
+                            ? formData.avatar
+                            : (user && user.avatar && user.avatar.trim()
+                                ? user.avatar
+                                : "/phoenix/v1.20.1/assets/img/generic/avatar.png")
+                        }
                         alt="Profile"
-                        style={{ width: 96, height: 96, objectFit: 'cover' }}
+                        style={{ width: 96, height: 96, objectFit: "cover" }}
+                        onError={(e) => {
+                          e.target.src =
+                            "/phoenix/v1.20.1/assets/img/generic/avatar.png";
+                        }}
                       />
                     </div>
                     <div>
-                      <label className="form-label fw-bold">Profile Picture</label>
+                      <label className="form-label fw-bold">
+                        Profile Picture
+                      </label>
                       <input
                         type="file"
                         className="form-control"
@@ -158,61 +231,70 @@ const Profile = () => {
                       />
                       <small className="text-muted">
                         Supported formats: JPG, PNG, GIF. Max size: 2MB.
-                        {uploading && <span className="text-primary ms-2">Uploading...</span>}
+                        {uploading && (
+                          <span className="text-primary ms-2">
+                            Uploading...
+                          </span>
+                        )}
                       </small>
                     </div>
                   </div>
                 </div>
 
                 <div className="col-md-6">
-                  <label className="form-label" htmlFor="name">Full Name</label>
-                  <input 
-                    className="form-control" 
-                    type="text" 
-                    id="name" 
+                  <label className="form-label" htmlFor="name">
+                    Full Name
+                  </label>
+                  <input
+                    className="form-control"
+                    type="text"
+                    id="name"
                     name="name"
-                    placeholder="Enter your full name" 
-                    value={formData.name} 
-                    onChange={handleChange} 
-                    required 
+                    placeholder="Enter your full name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
                   />
                 </div>
                 <div className="col-md-6">
-                  <label className="form-label" htmlFor="phone">Phone Number</label>
-                  <input 
-                    className="form-control" 
-                    type="tel" 
-                    id="phone" 
+                  <label className="form-label" htmlFor="phone">
+                    Phone Number
+                  </label>
+                  <input
+                    className="form-control"
+                    type="tel"
+                    id="phone"
                     name="phone"
-                    placeholder="Enter phone number" 
-                    value={formData.phone} 
-                    onChange={handleChange} 
+                    placeholder="Enter phone number"
+                    value={formData.phone}
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="col-12">
-                  <label className="form-label" htmlFor="address">Address</label>
-                  <textarea 
-                    className="form-control" 
-                    id="address" 
+                  <label className="form-label" htmlFor="address">
+                    Address
+                  </label>
+                  <textarea
+                    className="form-control"
+                    id="address"
                     name="address"
-                    rows="3" 
-                    placeholder="Enter your address" 
-                    value={formData.address} 
+                    rows="3"
+                    placeholder="Enter your address"
+                    value={formData.address}
                     onChange={handleChange}
                   ></textarea>
                 </div>
-                {/* Remove Avatar URL input */}
               </div>
               <div className="d-flex justify-content-end mt-4">
-                <button 
-                  type="button" 
-                  className="btn btn-secondary me-2" 
+                <button
+                  type="button"
+                  className="btn btn-secondary me-2"
                   onClick={() => {
                     setFormData({
                       name: user?.name || "",
                       phone: user?.phone || "",
                       address: user?.address || "",
-                      avatar: user?.avatar || ""
+                      avatar: user?.avatar || "",
                     });
                     setSuccess(null);
                     setError(null);
@@ -220,11 +302,17 @@ const Profile = () => {
                 >
                   Reset
                 </button>
-                <button type="submit" className="btn btn-primary" disabled={loading}>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={loading}
+                >
                   {loading ? "Updating..." : "Update Profile"}
                 </button>
               </div>
-              {success && <div className="alert alert-success mt-3">{success}</div>}
+              {success && (
+                <div className="alert alert-success mt-3">{success}</div>
+              )}
               {error && <div className="alert alert-danger mt-3">{error}</div>}
             </form>
           </div>
@@ -234,4 +322,4 @@ const Profile = () => {
   );
 };
 
-export default Profile; 
+export default Profile;
