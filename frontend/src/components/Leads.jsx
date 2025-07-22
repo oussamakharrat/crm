@@ -21,7 +21,7 @@ const Leads = () => {
   });
   const [formError, setFormError] = useState(null);
   const { user, roles } = useAuth();
-  // const { theme } = useContext(ThemeContext); // theme is not used
+  const { theme } = React.useContext(ThemeContext);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -251,23 +251,23 @@ const Leads = () => {
                     <td className="name align-middle white-space-nowrap ps-0">
                       <div className="d-flex align-items-center">
                         <div>
-                          <span className="fs-8 fw-bold">{lead.name}</span>
+                          <span className={`fs-8 fw-bold ${theme === 'dark' ? 'text-light' : 'text-dark'}`}>{lead.name}</span>
                           <div className="d-flex align-items-center">
-                            <p className="mb-0 text-body-highlight fw-semibold fs-9 me-2">{lead.status}</p>
+                            <p className={`mb-0 fw-semibold fs-9 me-2 ${theme === 'dark' ? 'text-light custom-nav-link-dark' : 'text-dark custom-nav-link-light'}`}>{lead.status}</p>
                           </div>
                         </div>
                       </div>
                     </td>
-                    <td className="email align-middle white-space-nowrap fw-semibold ps-4 border-end border-translucent">
-                      <a className="text-body-highlight" href={`mailto:${lead.email}`}>{lead.email}</a>
+                    <td className={`email align-middle white-space-nowrap fw-semibold ps-4 border-end border-translucent`}>
+                      <a className={`${theme === 'dark' ? 'text-light custom-nav-link-dark' : 'text-dark custom-nav-link-light'}`} href={`mailto:${lead.email}`}>{lead.email}</a>
                     </td>
-                    <td className="phone align-middle white-space-nowrap fw-semibold ps-4 border-end border-translucent">
-                      <a className="text-body-highlight" href={`tel:${lead.phone}`}>{lead.phone}</a>
+                    <td className={`phone align-middle white-space-nowrap fw-semibold ps-4 border-end border-translucent`}>
+                      <a className={`${theme === 'dark' ? 'text-light custom-nav-link-dark' : 'text-dark custom-nav-link-light'}`} href={`tel:${lead.phone}`}>{lead.phone}</a>
                     </td>
-                    <td className="status align-middle white-space-nowrap ps-4 border-end border-translucent fw-semibold text-body-highlight">
+                    <td className={`status align-middle white-space-nowrap ps-4 border-end border-translucent fw-semibold ${theme === 'dark' ? 'text-light custom-nav-link-dark' : 'text-dark custom-nav-link-light'}`}>
                       {lead.status}
                     </td>
-                    <td className="company align-middle white-space-nowrap text-body-tertiary text-opacity-85 ps-4 border-end border-translucent fw-semibold text-body-highlight">
+                    <td className={`company align-middle white-space-nowrap ps-4 border-end border-translucent fw-semibold ${theme === 'dark' ? 'text-light custom-nav-link-dark' : 'text-dark custom-nav-link-light'}`}>
                       {lead.company}
                     </td>
                     <td className="assigned align-middle white-space-nowrap text-body-tertiary text-opacity-85 ps-4 text-body-tertiary">

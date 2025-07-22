@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../AuthContext";
 import api from "../api";
+import { ThemeContext } from "../ThemeContext";
 
 const Contacts = () => {
   const [contacts, setContacts] = useState([]);
   const { user } = useContext(AuthContext);
+  const { theme } = useContext(ThemeContext);
 
   useEffect(() => {
     const fetchContacts = async () => {
@@ -15,7 +17,7 @@ const Contacts = () => {
           }
         });
         setContacts(res.data);
-      } catch (err) {
+      } catch {
         setContacts([]);
       }
     };
@@ -75,12 +77,12 @@ const Contacts = () => {
                           </div>
                         </td>
                         <td className="email align-middle white-space-nowrap fw-semibold ps-4 border-end border-translucent">
-                          <a className="text-body-highlight" href={`mailto:${contact.email}`}>{contact.email}</a>
+                          <a className={`${theme === "light" ? "text-black" : "text-white"}`} href={`mailto:${contact.email}`}>{contact.email}</a>
                         </td>
                         <td className="phone align-middle white-space-nowrap fw-semibold ps-4 border-end border-translucent">
-                          <a className="text-body-highlight" href={`tel:${contact.phone}`}>{contact.phone}</a>
+                          <a className={`${theme === "light" ? "text-black" : "text-white"}`} href={`tel:${contact.phone}`}>{contact.phone}</a>
                         </td>
-                        <td className="address align-middle white-space-nowrap text-body-tertiary text-opacity-85 ps-4 border-end border-translucent fw-semibold text-body-highlight">
+                        <td className={`address align-middle white-space-nowrap text-body-tertiary ps-4 border-end border-translucent fw-semibold ${theme === "light" ? "text-black" : "text-white"}`}>
                           {contact.address}
                         </td>
                         <td className="align-middle white-space-nowrap text-end pe-0 ps-4">

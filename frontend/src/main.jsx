@@ -11,10 +11,6 @@ import '../public/phoenix/v1.20.1/assets/css/user.min.css';
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ThemeProvider>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </ThemeProvider>
+    <App />
   </React.StrictMode>
 );

@@ -1,10 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import { ThemeContext } from "../ThemeContext";
 import { AuthContext } from "../AuthContext";
 import { Link } from "react-router-dom";
 
 const Reports = () => {
-  const { theme } = useContext(ThemeContext);
   const { user } = useContext(AuthContext);
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,6 +15,7 @@ const Reports = () => {
   });
   const [adding, setAdding] = useState(false);
   const [error, setError] = useState('');
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const fetchReports = async () => {
@@ -26,7 +25,7 @@ const Reports = () => {
         const res = await fetch("/api/reports", { headers });
         const data = await res.json();
         setReports(Array.isArray(data) ? data : []);
-      } catch (err) {
+      } catch {
         setReports([]);
       }
       setLoading(false);
@@ -67,19 +66,10 @@ const Reports = () => {
     }
   };
 
-  const mainStyle = {
-    background: 'var(--phoenix-body-bg)',
-    color: 'var(--phoenix-body-color)'
-  };
-  const cardStyle = {
-    background: 'var(--phoenix-card-bg)',
-    color: 'var(--phoenix-card-color)',
-    boxShadow: '0 4px 24px rgba(37,99,235,0.08)'
-  };
-  const tableStyle = {
-    background: 'var(--phoenix-card-bg)',
-    color: 'var(--phoenix-card-color)'
-  };
+  // Filter reports by search
+  const filteredReports = reports.filter(report =>
+    report.name && report.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <>
@@ -108,8 +98,15 @@ const Reports = () => {
           <div className="col-auto">
             <div className="d-flex">
               <div className="search-box me-2">
-                <form className="position-relative">
-                  <input className="form-control search-input search" type="search" placeholder="Search reports" aria-label="Search" />
+                <form className="position-relative" onSubmit={e => e.preventDefault()}>
+                  <input
+                    className="form-control search-input search"
+                    type="search"
+                    placeholder="Search reports"
+                    aria-label="Search"
+                    value={search}
+                    onChange={e => setSearch(e.target.value)}
+                  />
                   <span className="fas fa-search search-box-icon"></span>
                 </form>
               </div>
@@ -168,7 +165,7 @@ const Reports = () => {
           </div>
         )}
         <div className="row g-3 mb-6">
-          {(reports.length > 0 ? reports.slice(0, 3) : [
+          {(filteredReports.length > 0 ? filteredReports.slice(0, 3) : [
             { name: "Sales Report", type: "Sales", description: "", parameters: {}, status: "Completed" },
             { name: "Lead Conversion", type: "Leads", description: "", parameters: {}, status: "In Progress" },
             { name: "Revenue Growth", type: "Revenue", description: "", parameters: {}, status: "Completed" }
@@ -205,10 +202,10 @@ const Reports = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {reports.length === 0 ? (
+                    {filteredReports.length === 0 ? (
                       <tr><td colSpan="5">No reports found.</td></tr>
                     ) : (
-                      reports.map((report, idx) => (
+                      filteredReports.map((report, idx) => (
                         <tr key={report.id || idx}>
                           <td>{report.name}</td>
                           <td><span className="badge badge-phoenix badge-phoenix-primary">{report.type}</span></td>

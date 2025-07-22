@@ -1,6 +1,44 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 const ThemeContext = createContext();
+
+export const AppSettingsContext = createContext();
+
+export const AppSettingsProvider = ({ children }) => {
+  const [settings, setSettings] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  // Fetch settings from backend
+  const fetchSettings = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/settings");
+      const data = await res.json();
+      const settingsObj = {};
+      data.forEach(s => { settingsObj[s.key] = s.value; });
+      setSettings(settingsObj);
+    } catch {
+      setSettings({});
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { fetchSettings(); }, []);
+
+  // Update a setting (e.g., after logo upload)
+  const updateSetting = (key, value) => {
+    setSettings(prev => ({ ...prev, [key]: value }));
+  };
+
+  return (
+    <AppSettingsContext.Provider value={{ settings, loading, fetchSettings, updateSetting }}>
+      {children}
+    </AppSettingsContext.Provider>
+  );
+};
+
+export const useAppSettings = () => useContext(AppSettingsContext);
 
 export const ThemeProvider = ({ children }) => {
   // Set initial theme from localStorage or default to 'light'

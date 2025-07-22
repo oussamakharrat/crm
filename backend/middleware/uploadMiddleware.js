@@ -35,4 +35,21 @@ const upload = multer({
   }
 });
 
+// Add storage for app logos
+const appLogoStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, '../uploads/app/'));
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, 'logo-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+export const uploadAppLogo = multer({
+  storage: appLogoStorage,
+  fileFilter: fileFilter,
+  limits: { fileSize: 2 * 1024 * 1024 }
+});
+
 export default upload; 

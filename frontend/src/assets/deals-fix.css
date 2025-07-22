@@ -1,0 +1,225 @@
+/* Theme variable overrides for React charts */
+:root, [data-bs-theme="light"] {
+  --phoenix-card-bg: #fff;
+  --phoenix-card-color: #222834;
+}
+[data-bs-theme="dark"] {
+  --phoenix-card-bg: #141824;
+  --phoenix-card-color: #eff2f6;
+}
+
+.kanban-deals-content {
+  width: 100%;
+  margin-left: 15.875rem; /* Sidebar width from theme CSS */
+  box-sizing: border-box;
+}
+
+@media (max-width: 991.98px) {
+  .kanban-deals-content {
+    margin-left: 0;
+  }
+} 
+
+/* Custom modal backdrop only covers the content area, not the sidebar */
+.custom-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 250px; /* Sidebar width */
+  width: calc(100vw - 250px);
+  height: 100vh;
+  background: rgba(0,0,0,0.3);
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Center the modal in the available space */
+.custom-modal-centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Modal content sizing */
+.custom-modal-centered .modal-content {
+  max-width: 500px;
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+} 
+
+/* Center modal header and form elements */
+.custom-modal-centered .modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.custom-modal-centered .modal-header {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.custom-modal-centered .modal-header h3 {
+  width: 100%;
+  text-align: center;
+}
+
+.custom-modal-centered .modal-body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.custom-modal-centered form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.custom-modal-centered .row.g-4 {
+  width: 100%;
+  justify-content: center;
+}
+
+.custom-modal-centered .col-lg-6 {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.custom-modal-centered .modal-footer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.custom-modal-centered .form-control,
+.custom-modal-centered .form-select {
+  text-align: center;
+} 
+
+/* Add spacing between modal elements */
+.custom-modal-centered .modal-header {
+  margin-bottom: 1.5rem;
+}
+
+.custom-modal-centered .modal-body {
+  margin-bottom: 1.5rem;
+}
+
+.custom-modal-centered .col-lg-6 > .mb-4 {
+  margin-bottom: 1.25rem !important;
+}
+
+.custom-modal-centered .modal-footer {
+  margin-top: 1.5rem;
+  gap: 1rem;
+}
+
+.custom-modal-centered .form-control,
+.custom-modal-centered .form-select {
+  margin-bottom: 1rem;
+}
+
+.custom-modal-centered .alert {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+} 
+
+/* Custom theme-aware nav-link styles for avatar dropdown */
+.custom-nav-link-dark {
+  transition: background 0.2s, color 0.2s;
+}
+.custom-nav-link-dark:hover, .custom-nav-link-dark:focus {
+  background: #23293a !important;
+  color: #fff !important;
+}
+.custom-nav-link-light {
+  transition: background 0.2s, color 0.2s;
+}
+.custom-nav-link-light:hover, .custom-nav-link-light:focus {
+  background: #f5f7fa !important;
+  color: #222834 !important;
+} 
+
+/* Theme-aware Add Deal modal styles */
+.custom-modal-centered .modal-content {
+  background: var(--phoenix-card-bg, #fff);
+  color: var(--phoenix-card-color, #222834);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 1.5px 8px rgba(0,0,0,0.10);
+  border: 1px solid var(--phoenix-card-border-color, #e3e6ed);
+  padding: 2rem 1.5rem;
+  transition: background 0.2s, color 0.2s;
+}
+.custom-modal-centered .modal-header {
+  background: transparent;
+  color: inherit;
+  border-bottom: none;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0;
+  justify-content: space-between;
+  align-items: center;
+}
+.custom-modal-centered .modal-header h3 {
+  color: inherit;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+.custom-modal-centered .modal-body {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+.custom-modal-centered .modal-footer {
+  background: transparent;
+  border-top: none;
+  margin-top: 1.5rem;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+.custom-modal-centered .form-control,
+.custom-modal-centered .form-select {
+  background: var(--phoenix-emphasis-bg, #fff);
+  color: var(--phoenix-emphasis-color, #141824);
+  border: 1px solid var(--phoenix-card-border-color, #e3e6ed);
+  border-radius: 8px;
+  box-shadow: none;
+  transition: background 0.2s, color 0.2s;
+}
+[data-theme="dark"] .custom-modal-centered .form-control,
+[data-theme="dark"] .custom-modal-centered .form-select {
+  background: #23293a;
+  color: #e8eaed;
+  border: 1px solid #2d3748;
+}
+.custom-modal-centered .btn-link.text-danger {
+  color: #f56565 !important;
+}
+.custom-modal-centered .btn-primary {
+  background: var(--phoenix-primary, #4299e1);
+  border: none;
+}
+.custom-modal-centered .btn-primary:disabled {
+  background: #b3c7e6;
+} 
+
+/* Theme-aware label styles for Add Deal modal */
+.custom-modal-centered label {
+  color: var(--phoenix-emphasis-color, #141824);
+  font-weight: 600;
+  transition: color 0.2s;
+}
+[data-theme="dark"] .custom-modal-centered label {
+  color: #e8eaed;
+} 

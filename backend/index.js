@@ -12,6 +12,7 @@ import { fileURLToPath } from 'url';
 import fs from 'fs';
 import invoiceRoutes from './routes/invoiceRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
+import settingsRoutes from './routes/settingsRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -32,6 +33,11 @@ if (!fs.existsSync(avatarsDir)) {
   fs.mkdirSync(avatarsDir, { recursive: true });
 }
 
+const appDir = path.join(uploadsDir, 'app');
+if (!fs.existsSync(appDir)) {
+  fs.mkdirSync(appDir, { recursive: true });
+}
+
 app.use(express.json());
 app.use(cors());
 
@@ -49,6 +55,7 @@ app.use("/api/leads", leadRoutes);
 app.use("/api", reportRoutes);
 app.use("/api", invoiceRoutes);
 app.use("/api", notificationRoutes);
+app.use('/settings', settingsRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
