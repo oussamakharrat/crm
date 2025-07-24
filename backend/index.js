@@ -13,6 +13,7 @@ import fs from 'fs';
 import invoiceRoutes from './routes/invoiceRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
+import db from './config/db.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -47,6 +48,19 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.get("/", (req, res) => {
     res.send("Hello World");
 });
+
+// Test the connection at startup
+if (process.env.NODE_ENV !== 'test') {
+  db.getConnection()
+    .then(connection => {
+      console.log('Database connected!');
+      connection.release();
+    })
+    .catch(err => {
+      console.error('Database connection failed:', err);
+      process.exit(1);
+    });
+}
 
 app.use("/api", userRoutes);
 app.use("/api", dealRoutes);

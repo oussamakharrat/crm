@@ -1,0 +1,48 @@
+{
+  "name": "rendy",
+  "version": "4.1.3",
+  "description": "simplest template engine",
+  "main": "./lib/rendy.js",
+  "exports": "./lib/rendy.js",
+  "type": "commonjs",
+  "scripts": {
+    "lint": "madrun lint",
+    "fix:lint": "madrun fix:lint",
+    "test": "madrun test",
+    "test:dts": "madrun test:dts",
+    "coverage": "madrun coverage",
+    "report": "madrun report"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/coderaiser/rendy.git"
+  },
+  "keywords": [
+    "template",
+    "engine"
+  ],
+  "author": "coderaiser <mnemonic.enemy@gmail.com> (http://coderaiser.github.io/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/coderaiser/rendy/issues"
+  },
+  "homepage": "https://github.com/coderaiser/rendy",
+  "devDependencies": {
+    "c8": "^8.0.1",
+    "check-dts": "^0.7.2",
+    "coveralls": "^3.0.0",
+    "eslint": "^8.51.0",
+    "eslint-plugin-n": "^16.2.0",
+    "eslint-plugin-putout": "^20.0.0",
+    "madrun": "^9.4.0",
+    "putout": "^32.2.1",
+    "supertape": "^8.6.0",
+    "try-catch": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

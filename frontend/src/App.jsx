@@ -85,7 +85,7 @@ const App = () => {
         <AuthProvider>
           <Router>
             <ErrorBoundary>
-              <MainApp />
+            <MainApp />
             </ErrorBoundary>
           </Router>
         </AuthProvider>

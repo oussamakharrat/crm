@@ -1,0 +1,54 @@
+{
+  "name": "@putout/git-status-porcelain",
+  "version": "3.0.0",
+  "type": "commonjs",
+  "description": "parse git status --porclain output with a pleasure",
+  "main": "lib/porcelain.js",
+  "scripts": {
+    "test": "madrun test",
+    "coverage": "madrun coverage",
+    "lint": "madrun lint",
+    "fix:lint": "madrun fix:lint",
+    "report": "madrun report",
+    "watcher": "madrun watcher",
+    "watch:test": "madrun watch:test",
+    "watch:lint": "madrun watch:lint",
+    "watch:tape": "madrun watch:tape",
+    "watch:coverage:base": "madrun watch:coverage:base",
+    "watch:coverage:tape": "madrun watch:coverage:tape",
+    "watch:coverage": "madrun watch:coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/putoutjs/git-status-porcelain.git"
+  },
+  "keywords": [
+    "read",
+    "uint",
+    "buffer"
+  ],
+  "author": "coderaiser <mnemonic.enemy@gmail.com> (http://coderaiser.github.io/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/putoutjs/git-status-porcelain/issues"
+  },
+  "homepage": "https://github.com/putoutjs/git-status-porcelain",
+  "devDependencies": {
+    "c8": "^8.0.0",
+    "eslint": "^8.15.0",
+    "eslint-plugin-n": "^16.0.0",
+    "eslint-plugin-putout": "^17.7.0",
+    "madrun": "^9.0.3",
+    "mock-require": "^3.0.3",
+    "nodemon": "^2.0.2",
+    "putout": "^29.13.5",
+    "supertape": "^8.3.0"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "dependencies": {},
+  "publishConfig": {
+    "access": "public"
+  }
+}
