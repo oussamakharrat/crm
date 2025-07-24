@@ -118,9 +118,7 @@ const AdminDashboard = () => {
           </div>
         </div>
         {/* Admin Role Management Section - Only for Admins */}
-        {roles.some(role => (typeof role === 'string' && role.toLowerCase() === 'admin') || (typeof role === 'object' && role.name && role.name.toLowerCase() === 'admin')) && (
-          <AdminRolePanel />
-        )}
+        {/* AdminRolePanel removed: now available on a dedicated page */}
       </div>
     </div>
   );

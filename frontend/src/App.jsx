@@ -23,6 +23,15 @@ import { useAuth } from "./hooks/useAuth";
 import Settings from "./components/Settings";
 import { LogoProvider } from "./LogoContext";
 import ErrorBoundary from "./components/ErrorBoundary";
+import AdminRolePanel from "./components/AdminRolePanel";
+
+// AdminRoute: wrapper for admin-only routes
+const AdminRoute = ({ children }) => {
+  const { roles, loading } = useAuth();
+  if (loading) return <div>Loading...</div>;
+  const isAdmin = roles.some(role => (typeof role === 'string' && role.toLowerCase() === 'admin') || (typeof role === 'object' && role.name && role.name.toLowerCase() === 'admin'));
+  return isAdmin ? children : <Navigate to="/dashboard" replace />;
+};
 
 const MainApp = () => {
   const { user, loading } = useAuth();
@@ -47,6 +56,8 @@ const MainApp = () => {
             <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
             <Route path="/invoices" element={<PrivateRoute><InvoiceList /></PrivateRoute>} />
             <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
+            {/* Admin-only role management page */}
+            <Route path="/admin/roles" element={<PrivateRoute><AdminRoute><AdminRolePanel /></AdminRoute></PrivateRoute>} />
             {/* Public routes */}
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />

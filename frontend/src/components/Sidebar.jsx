@@ -98,6 +98,9 @@ const Sidebar = () => {
             {isAdmin && (
               <SidebarLink to="/settings" icon="settings" text="Settings" active={location.pathname === "/settings"} />
             )}
+            {isAdmin && (
+              <SidebarLink to="/admin/roles" icon="shield" text="Role Management" active={location.pathname === "/admin/roles"} />
+            )}
           </ul>
         </div>
       </div>

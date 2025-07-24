@@ -3,12 +3,21 @@ import pool from '../config/db.js';
 export class Report {
   static async usersByRole() {
     const [rows] = await pool.query(`
-      SELECT r.name AS role, COUNT(ur.user_id) AS user_count
-      FROM roles r
-      LEFT JOIN user_roles ur ON r.id = ur.role_id
+      SELECT r.name AS role, COUNT(ru.user_id) AS user_count,
+        GROUP_CONCAT(DISTINCT ud.name ORDER BY ud.name SEPARATOR ',') AS user_names,
+        GROUP_CONCAT(DISTINCT ua.email ORDER BY ua.email SEPARATOR ',') AS user_emails
+      FROM role r
+      LEFT JOIN roleuser ru ON r.id = ru.role_id
+      LEFT JOIN userdetails ud ON ru.user_id = ud.id
+      LEFT JOIN userauth ua ON ru.user_id = ua.user_id
       GROUP BY r.id
     `);
-    return rows;
+    // Format users as array of { name, email }
+    return rows.map(row => ({
+      role: row.role,
+      user_count: row.user_count,
+      users: row.user_names ? row.user_names.split(',').map((name, i) => ({ name, email: row.user_emails ? row.user_emails.split(',')[i] : '' })) : []
+    }));
   }
 
   static async leadsByStatus() {
