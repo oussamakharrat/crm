@@ -4,6 +4,7 @@ import {
   updateUserProfile,
   uploadAvatar,
   fetchCurrentUserProfile,
+  updateUserAuth,
 } from "../api";
 
 const Profile = () => {
@@ -14,11 +15,20 @@ const Profile = () => {
     address: "",
     avatar: "",
   });
+  const [previewAvatar, setPreviewAvatar] = useState("");
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
+  const [authData, setAuthData] = useState({
+    email: user?.email || "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [authLoading, setAuthLoading] = useState(false);
+  const [authSuccess, setAuthSuccess] = useState(null);
+  const [authError, setAuthError] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -45,7 +55,6 @@ const Profile = () => {
               address: profileData?.address || user.address || "",
               avatar: profileData?.avatar || user.avatar || "",
             };
-            // Only update if different
             if (
               prev.name !== newFormData.name ||
               prev.phone !== newFormData.phone ||
@@ -56,6 +65,15 @@ const Profile = () => {
             }
             return prev;
           });
+          // Always reset previewAvatar to show backend avatar on profile fetch
+          if (previewAvatar) URL.revokeObjectURL(previewAvatar);
+          setPreviewAvatar("");
+          setAuthData((prev) => ({
+            ...prev,
+            email: profileData?.email || user.email || "",
+            password: "",
+            confirmPassword: "",
+          }));
         }
       } catch {
         if (isMounted) {
@@ -87,6 +105,13 @@ const Profile = () => {
       isMounted = false;
     };
   }, [user && user.token]);
+
+  useEffect(() => {
+    // Clean up preview URL when component unmounts or preview changes
+    return () => {
+      if (previewAvatar) URL.revokeObjectURL(previewAvatar);
+    };
+  }, [previewAvatar]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -135,6 +160,11 @@ const Profile = () => {
     const file = e.target.files[0];
     if (!file) return;
 
+    // Show local preview immediately
+    if (previewAvatar) URL.revokeObjectURL(previewAvatar);
+    const localUrl = URL.createObjectURL(file);
+    setPreviewAvatar(localUrl);
+
     setUploading(true);
     setError(null);
 
@@ -146,6 +176,7 @@ const Profile = () => {
         ...prev,
         avatar: newAvatarPath,
       }));
+      // Do NOT clear previewAvatar here; let the user see their selected image until profile is reloaded
       setSuccess(
         "Avatar uploaded successfully! (Don't forget to press 'Update Profile' to save changes.)"
       );
@@ -153,6 +184,44 @@ const Profile = () => {
       setError(err.response?.data?.error || "Failed to upload avatar");
     } finally {
       setUploading(false);
+    }
+  };
+
+  const handleAuthChange = (e) => {
+    const { name, value } = e.target;
+    setAuthData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleAuthSubmit = async (e) => {
+    e.preventDefault();
+    setAuthLoading(true);
+    setAuthSuccess(null);
+    setAuthError(null);
+    if (authData.password && authData.password !== authData.confirmPassword) {
+      setAuthError("Passwords do not match");
+      setAuthLoading(false);
+      return;
+    }
+    try {
+      const payload = {};
+      if (authData.email && authData.email !== user.email) payload.email = authData.email;
+      if (authData.password) payload.password = authData.password;
+      if (!payload.email && !payload.password) {
+        setAuthError("No changes to update");
+        setAuthLoading(false);
+        return;
+      }
+      await updateUserAuth(user.token, payload);
+      setUser((prev) => ({ ...prev, email: authData.email }));
+      setAuthSuccess("Credentials updated successfully!");
+      setAuthData((prev) => ({ ...prev, password: "", confirmPassword: "" }));
+    } catch (err) {
+      setAuthError(err.response?.data?.error || "Failed to update credentials");
+    } finally {
+      setAuthLoading(false);
     }
   };
 
@@ -199,26 +268,25 @@ const Profile = () => {
               <div className="row g-3">
                 {/* Avatar Section */}
                 <div className="col-12 mb-4">
-                  <div className="d-flex align-items-center">
-                    <div className="avatar avatar-4xl me-4">
+                  <div className="d-flex align-items-center" style={{ gap: 24 }}>
+                    <div className="avatar avatar-4xl me-4" style={{ minWidth: 96, minHeight: 96, background: '#f8f9fa', border: '1px solid #dee2e6', display: 'flex', alignItems: 'center', justifyContent: 'center', marginRight: 24, borderRadius: '50%' }}>
                       <img
                         className="rounded-circle"
                         src={
-                          formData.avatar && formData.avatar.trim()
+                          previewAvatar
+                            ? previewAvatar
+                            : formData.avatar && formData.avatar.trim()
                             ? formData.avatar
-                            : (user && user.avatar && user.avatar.trim()
-                                ? user.avatar
-                                : "/phoenix/v1.20.1/assets/img/generic/avatar.png")
+                            : "/phoenix/v1.20.1/assets/img/generic/avatar.png"
                         }
                         alt="Profile"
-                        style={{ width: 96, height: 96, objectFit: "cover" }}
+                        style={{ width: 96, height: 96, objectFit: "cover", border: '2px solid #adb5bd', background: '#fff', borderRadius: '50%' }}
                         onError={(e) => {
-                          e.target.src =
-                            "/phoenix/v1.20.1/assets/img/generic/avatar.png";
+                          e.target.src = "/phoenix/v1.20.1/assets/img/generic/avatar.png";
                         }}
                       />
                     </div>
-                    <div>
+                    <div style={{ flex: 1 }}>
                       <label className="form-label fw-bold">
                         Profile Picture
                       </label>
@@ -314,6 +382,63 @@ const Profile = () => {
                 <div className="alert alert-success mt-3">{success}</div>
               )}
               {error && <div className="alert alert-danger mt-3">{error}</div>}
+            </form>
+            <hr className="my-4" />
+            <h5 className="mb-3">Change Email or Password</h5>
+            <form onSubmit={handleAuthSubmit} className="row g-3">
+              <div className="col-md-6">
+                <label className="form-label" htmlFor="email">Email</label>
+                <input
+                  className="form-control"
+                  type="email"
+                  id="email"
+                  name="email"
+                  placeholder="Enter your email"
+                  value={authData.email}
+                  onChange={handleAuthChange}
+                  required
+                />
+              </div>
+              <div className="col-md-6"></div>
+              <div className="col-md-6">
+                <label className="form-label" htmlFor="password">New Password</label>
+                <input
+                  className="form-control"
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="Enter new password"
+                  value={authData.password}
+                  onChange={handleAuthChange}
+                  autoComplete="new-password"
+                />
+              </div>
+              <div className="col-md-6">
+                <label className="form-label" htmlFor="confirmPassword">Confirm New Password</label>
+                <input
+                  className="form-control"
+                  type="password"
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  placeholder="Confirm new password"
+                  value={authData.confirmPassword}
+                  onChange={handleAuthChange}
+                  autoComplete="new-password"
+                />
+              </div>
+              <div className="d-flex justify-content-end mt-4">
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={authLoading}
+                >
+                  {authLoading ? "Updating..." : "Update Email/Password"}
+                </button>
+              </div>
+              {authSuccess && (
+                <div className="alert alert-success mt-3">{authSuccess}</div>
+              )}
+              {authError && <div className="alert alert-danger mt-3">{authError}</div>}
             </form>
           </div>
         </div>

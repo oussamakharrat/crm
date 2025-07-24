@@ -57,6 +57,13 @@ export const uploadAvatar = (token, file) => {
   });
 };
 
+// Update user email and/or password
+export const updateUserAuth = (token, authData) => {
+  return api.put("/profile/auth", authData, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
 // Analytics/Reporting endpoints
 export const fetchUsersByRole = () => api.get("/reports/users-by-role");
 export const fetchLeadsByStatus = (token) => api.get("/reports/leads-by-status", {

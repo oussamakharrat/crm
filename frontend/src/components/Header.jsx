@@ -417,10 +417,10 @@ const Header = () => {
                     <ul className="nav d-flex flex-column mb-2 pb-1">
                       <li className="nav-item">
                         <a
-                          className={`nav-link px-3 d-block rounded ${
+                          className={`nav-link px-3 d-block ${
                             theme === "light"
-                              ? "hover:bg-light"
-                              : "text-white hover:bg-secondary hover:text-black"
+                              ? "custom-nav-link-light"
+                              : "custom-nav-link-dark"
                           }`}
                           href="#"
                           onClick={(e) => {
@@ -440,10 +440,10 @@ const Header = () => {
 
                       <li className="nav-item">
                         <a
-                          className={`nav-link px-3 d-block rounded ${
+                          className={`nav-link px-3 d-block ${
                             theme === "light"
-                              ? "hover:bg-light"
-                              : "text-white hover:bg-secondary"
+                              ? "custom-nav-link-light"
+                              : "custom-nav-link-dark"
                           }`}
                           href="/dashboard"
                         >
@@ -459,10 +459,10 @@ const Header = () => {
 
                       <li className="nav-item">
                         <a
-                          className={`nav-link px-3 d-block rounded ${
+                          className={`nav-link px-3 d-block ${
                             theme === "light"
-                              ? "hover:bg-light"
-                              : "text-white hover:bg-secondary"
+                              ? "custom-nav-link-light"
+                              : "custom-nav-link-dark"
                           }`}
                           href="#"
                         >
@@ -478,10 +478,10 @@ const Header = () => {
 
                       <li className="nav-item">
                         <a
-                          className={`nav-link px-3 d-block rounded ${
+                          className={`nav-link px-3 d-block ${
                             theme === "light"
-                              ? "hover:bg-light"
-                              : "text-white hover:bg-secondary"
+                              ? "custom-nav-link-light"
+                              : "custom-nav-link-dark"
                           }`}
                           href="#"
                         >
@@ -497,10 +497,10 @@ const Header = () => {
 
                       <li className="nav-item">
                         <a
-                          className={`nav-link px-3 d-block rounded ${
+                          className={`nav-link px-3 d-block  ${
                             theme === "light"
-                              ? "hover:bg-light"
-                              : "text-white hover:bg-secondary"
+                              ? "custom-nav-link-light"
+                              : "custom-nav-link-dark"
                           }`}
                           href="#"
                         >
@@ -516,10 +516,10 @@ const Header = () => {
 
                       <li className="nav-item">
                         <a
-                          className={`nav-link px-3 d-block rounded ${
+                          className={`nav-link px-3 d-block  ${
                             theme === "light"
-                              ? "hover:bg-light"
-                              : "text-white hover:bg-secondary"
+                              ? "custom-nav-link-light"
+                              : "custom-nav-link-dark"
                           }`}
                           href="#"
                         >
@@ -538,19 +538,17 @@ const Header = () => {
                     <ul className="nav d-flex flex-column my-3">
                       <li className="nav-item">
                         <a
-                          className={`nav-link ${
+                          className={`nav-link px-3 d-block ${
                             theme === "light"
-                              ? "text-white hover:bg-light"
-                              : "text-white hover:bg-dark"
-                          } px-3 d-block`}
+                              ? "custom-nav-link-light"
+                              : "custom-nav-link-dark"
+                          }`}
                           href="#"
                         >
                           <span
-                            className={`me-2 ${
-                              theme === "light"
-                                ? "text-white hover:bg-light"
-                                : "text-white hover:bg-dark"
-                            } align-bottom`}
+                            className={`me-2 align-bottom ${
+                              theme === "light" ? "text-body" : "text-white"
+                            }`}
                             data-feather="user-plus"
                           ></span>
                           Add another account

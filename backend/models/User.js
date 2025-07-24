@@ -83,6 +83,15 @@ export class UserAuth {
     const [rows] = await db.execute('SELECT * FROM userauth');
     return rows;
   }
+  static async updateEmail(user_id, email) {
+    await db.execute('UPDATE userauth SET email = ? WHERE user_id = ?', [email, user_id]);
+    return this.findById(user_id);
+  }
+  static async updatePassword(user_id, password) {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await db.execute('UPDATE userauth SET password = ? WHERE user_id = ?', [hashedPassword, user_id]);
+    return this.findById(user_id);
+  }
 }
 
 export class Role {

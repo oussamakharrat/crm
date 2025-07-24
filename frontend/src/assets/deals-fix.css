@@ -139,13 +139,15 @@
 /* Custom theme-aware nav-link styles for avatar dropdown */
 .custom-nav-link-dark {
   transition: background 0.2s, color 0.2s;
+  color: #fff !important;
 }
 .custom-nav-link-dark:hover, .custom-nav-link-dark:focus {
-  background: #23293a !important;
+  background: #2d3748 !important; /* lighter, more readable */
   color: #fff !important;
 }
 .custom-nav-link-light {
   transition: background 0.2s, color 0.2s;
+  color: #222834 !important;
 }
 .custom-nav-link-light:hover, .custom-nav-link-light:focus {
   background: #f5f7fa !important;

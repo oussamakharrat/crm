@@ -254,6 +254,27 @@ export const updateCurrentUserProfile = async (req, res) => {
   }
 };
 
+// Update current user email and/or password
+export const updateCurrentUserAuth = async (req, res) => {
+  try {
+    const user_id = req.user.user_id;
+    const { email, password } = req.body;
+    let updatedAuth = null;
+    if (!email && !password) {
+      return res.status(400).json({ error: 'No email or password provided' });
+    }
+    if (email) {
+      updatedAuth = await UserAuth.updateEmail(user_id, email);
+    }
+    if (password) {
+      updatedAuth = await UserAuth.updatePassword(user_id, password);
+    }
+    res.json({ success: true, user: updatedAuth });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 // Login endpoint
 export const loginUser = async (req, res) => {
   try {

@@ -4,7 +4,7 @@ import {
   createUserAuth, getUserAuth, getAllUserAuth, updateUserAuthToken,
   getAllRoles, assignRoleToUser, getUserRoles,
   getAllPermissions, createPermission, assignPermissionToRole, getRolePermissions,
-  loginUser, getCurrentUserDetails, updateCurrentUserProfile, uploadAvatar, getAllClients
+  loginUser, getCurrentUserDetails, updateCurrentUserProfile, uploadAvatar, getAllClients, updateCurrentUserAuth
 } from '../controllers/userController.js';
 import { authenticate } from '../middleware/authMiddleware.js';
 import upload from '../middleware/uploadMiddleware.js';
@@ -25,6 +25,7 @@ router.use(authenticate);
 router.get('/profile', getCurrentUserDetails);
 router.put('/profile', updateCurrentUserProfile);
 router.post('/profile/avatar', upload.single('avatar'), uploadAvatar);
+router.put('/profile/auth', updateCurrentUserAuth);
 
 // userDetails CRUD
 router.get('/details', getAllUserDetails);
