@@ -3,6 +3,7 @@ import { AuthContext } from "../AuthContext";
 import * as echarts from 'echarts';
 import axios from 'axios';
 import { ThemeContext } from "../ThemeContext";
+import ErrorMessage from "./ErrorMessage";
 
 const Analytics = () => {
   const lineChartRef = useRef(null);
@@ -12,12 +13,14 @@ const Analytics = () => {
   const [revenueByMonth, setRevenueByMonth] = useState([]);
   const [dealsByStage, setDealsByStage] = useState([]);
   const [leadsByStatus, setLeadsByStatus] = useState([]);
+  const [error, setError] = useState(null);
   const { user } = useContext(AuthContext);
   const { theme } = useContext(ThemeContext);
 
   // Fetch analytics data
   useEffect(() => {
     setLoading(true);
+    setError(null);
     const token = user?.token || localStorage.getItem('token');
     const config = { headers: { Authorization: `Bearer ${token}` } };
     Promise.all([
@@ -32,7 +35,10 @@ const Analytics = () => {
       setDealsByStage(dealsRes.data || []);
       setLeadsByStatus(leadsRes.data || []);
       setLoading(false);
-    }).catch(() => setLoading(false));
+    }).catch(() => {
+      setError("Failed to fetch analytics data");
+      setLoading(false);
+    });
   }, [user?.token]);
 
   // Revenue Overview calculations
@@ -265,6 +271,7 @@ const Analytics = () => {
           </div>
         ) : (
         <>
+        {error && <ErrorMessage message={error} />}
         {/* Charts Row */}
         <div className="row g-3 mb-6">
           <div className="col-lg-4">

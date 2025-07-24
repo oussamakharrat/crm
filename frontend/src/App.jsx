@@ -22,6 +22,7 @@ import PrivateRoute from './components/PrivateRoute';
 import { useAuth } from "./hooks/useAuth";
 import Settings from "./components/Settings";
 import { LogoProvider } from "./LogoContext";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const MainApp = () => {
   const { user, loading } = useAuth();
@@ -83,7 +84,9 @@ const App = () => {
       <LogoProvider>
         <AuthProvider>
           <Router>
-            <MainApp />
+            <ErrorBoundary>
+              <MainApp />
+            </ErrorBoundary>
           </Router>
         </AuthProvider>
       </LogoProvider>

@@ -1,21 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api";
+import ErrorMessage from "./ErrorMessage";
 
 const LeadDetails = () => {
   const { id } = useParams();
   const [lead, setLead] = useState(null);
+  const [error, setError] = useState(null);
   useEffect(() => {
     const fetchLead = async () => {
-      const token = localStorage.getItem("token");
-      const res = await api.get(`/leads/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      setLead(res.data);
+      try {
+        const token = localStorage.getItem("token");
+        const res = await api.get(`/leads/${id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setLead(res.data);
+      } catch (err) {
+        setError("Failed to fetch lead details");
+      }
     };
     fetchLead();
     
   }, [id]);
+  if (error) return <ErrorMessage message={error} />;
   if (!lead) return <div>Loading...</div>;
   return (
     <>

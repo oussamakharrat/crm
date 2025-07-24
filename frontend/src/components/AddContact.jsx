@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { AuthContext } from "../AuthContext";
+import ErrorMessage from "./ErrorMessage";
 
 const AddContact = () => {
   const [firstName, setFirstName] = useState("");
@@ -140,8 +141,8 @@ const AddContact = () => {
                   Save Contact
                 </button>
               </div>
-              {success && <div className="alert alert-success mt-3">{success}</div>}
-              {error && <div className="alert alert-danger mt-3">{error}</div>}
+              {error && <ErrorMessage message={error} />}
+              {success && <div className="alert alert-success mt-3" role="alert">{success}</div>}
             </form>
           </div>
         </div>

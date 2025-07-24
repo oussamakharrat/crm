@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import ErrorMessage from "./ErrorMessage";
 
 const API_URL = 'http://localhost:5000/api';
 
 const InvoiceList = ({ token }) => {
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Fetch invoices on mount
   useEffect(() => {
@@ -15,13 +17,14 @@ const InvoiceList = ({ token }) => {
 
   const fetchInvoices = async () => {
     setLoading(true);
+    setError(null);
     try {
       const res = await axios.get(`${API_URL}/invoices`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setInvoices(res.data);
     } catch {
-      alert('Failed to fetch invoices');
+      setError('Failed to fetch invoices');
     }
     setLoading(false);
   };
@@ -77,6 +80,7 @@ const InvoiceList = ({ token }) => {
           </tbody>
         </table>
       )}
+      {error && <ErrorMessage message={error} />}
     </div>
   );
 };

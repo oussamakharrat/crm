@@ -3,6 +3,7 @@ import { useAuth } from "../hooks/useAuth";
 import { ThemeContext } from "../ThemeContext";
 import { Link } from "react-router-dom";
 import api from "../api";
+import ErrorMessage from "./ErrorMessage";
 
 const Leads = () => {
   const [leads, setLeads] = useState([]);
@@ -158,7 +159,7 @@ const Leads = () => {
                       <input type="text" className="form-control" name="assigned_to" value={form.assigned_to} onChange={handleInputChange} />
                     </div>
                   )}
-                  {formError && <div className="alert alert-danger">{formError}</div>}
+                  {formError && <ErrorMessage message={formError} />}
                 </div>
                 <div className="modal-footer" >
                   <button type="button" className="btn btn-secondary" onClick={handleCloseModal}>Cancel</button>
@@ -221,7 +222,7 @@ const Leads = () => {
           {loading ? (
             <div className="text-center p-4">Loading leads...</div>
           ) : error ? (
-            <div className="text-danger text-center p-4">{error}</div>
+            <ErrorMessage message={error} />
           ) : (
             <table className="table fs-9 mb-0 leads-table border-top border-translucent">
               <thead>
