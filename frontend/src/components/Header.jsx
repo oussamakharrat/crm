@@ -72,7 +72,6 @@ const Header = () => {
       };
       fetchLogo();
     }
-    // eslint-disable-next-line
   }, [logoUrl, setLogoUrl]);
 
   const avatarDropdownRef = useRef(null);
@@ -128,7 +127,7 @@ const Header = () => {
                   alt="phoenix"
                   width="27"
                 />
-                <h5 className="logo-text ms-2 d-none d-sm-block">{appName || "phoenix"}</h5>
+                <h5 className={`logo-text ms-2 d-none d-sm-block ${theme === 'dark' ? 'text-white' : 'text-body'}`}>{appName || "phoenix"}</h5>
               </div>
             </div>
           </a>

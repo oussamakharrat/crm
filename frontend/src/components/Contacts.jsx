@@ -82,7 +82,7 @@ const Contacts = () => {
                         <td className="phone align-middle white-space-nowrap fw-semibold ps-4 border-end border-translucent">
                           <a className={`${theme === "light" ? "text-black" : "text-white"}`} href={`tel:${contact.phone}`}>{contact.phone}</a>
                         </td>
-                        <td className={`address align-middle white-space-nowrap text-body-tertiary ps-4 border-end border-translucent fw-semibold ${theme === "light" ? "text-black" : "text-white"}`}>
+                        <td className={`address align-middle white-space-nowrap ps-4 border-end border-translucent fw-semibold ${theme === "light" ? "text-black" : "text-white"}`}>
                           {contact.address}
                         </td>
                         <td className="align-middle white-space-nowrap text-end pe-0 ps-4">

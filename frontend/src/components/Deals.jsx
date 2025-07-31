@@ -227,7 +227,7 @@ const Deals = () => {
                               </a>
                               <div className="d-flex align-items-center justify-content-between mb-2">
                                 <div className="d-flex align-items-center gap-2"><span className="me-2" data-feather="clock" style={{strokeWidth:2}}></span>
-                                  <p className="mb-0 fs-9 fw-semibold text-body-tertiary date">{deal.created_at ? new Date(deal.created_at).toLocaleString() : ""}</p>
+                                  <p className={`mb-0 fs-9 fw-semibold ${theme === 'dark' ? 'text-white' : 'text-body-tertiary'} date`}>{deal.created_at ? new Date(deal.created_at).toLocaleString() : ""}</p>
                                 </div>
                               </div>
                               <div className="deals-items-head d-flex align-items-center mb-2 gap-2 flex-wrap">
@@ -236,10 +236,10 @@ const Deals = () => {
                               </div>
                               <div className="deals-company-agent d-flex flex-between-center gap-2 mb-2 flex-wrap">
                                 <div className="d-flex align-items-center gap-1"><span className="uil uil-user me-1"></span>
-                                  <span className="text-body-secondary fw-bold fs-9">Owner ID: {deal.owner_id}</span>
+                                  <span className={`${theme === 'dark' ? 'text-white' : 'text-body-secondary'} fw-bold fs-9`}>Owner ID: {deal.owner_id}</span>
                                 </div>
                                 <div className="d-flex align-items-center gap-1"><span className="uil uil-headphones me-1"></span>
-                                  <span className="text-body-secondary fw-bold fs-9">Contact ID: {deal.contact_id}</span>
+                                  <span className={`${theme === 'dark' ? 'text-white' : 'text-body-secondary'} fw-bold fs-9`}>Contact ID: {deal.contact_id}</span>
                                 </div>
                               </div>
                               {/* Collapsible details section (optional) */}

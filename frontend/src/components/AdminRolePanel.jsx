@@ -14,6 +14,7 @@ const AdminRolePanel = () => {
   const chartRef = useRef(null);
   const { user } = useContext(AuthContext);
   const [roleData, setRoleData] = useState([]);
+  const { theme } = useContext(ThemeContext);
   // Add local state to track selected roles for each user
   const [pendingRoles, setPendingRoles] = useState({});
 
@@ -210,7 +211,6 @@ const AdminRolePanel = () => {
                     <h6 className="mb-0">Users by Role</h6>
                   </div>
                   <div className="card-body py-2 d-flex flex-column align-items-center justify-content-center" style={{ minHeight: 0 }}>
-                    <div ref={chartRef} style={{ minHeight: 120, marginBottom: 8, width: '100%' }}></div>
                     <ul className="list-group mt-2 w-100">
                       {roleData.map(rc => (
                         <li key={rc.role} className="list-group-item py-2 px-2 w-100">
@@ -221,7 +221,7 @@ const AdminRolePanel = () => {
                           {rc.users && rc.users.length > 0 && (
                             <ul className="list-unstyled ms-3 mb-0">
                               {rc.users.map((u, i) => (
-                                <li key={i} className="text-muted small">{u.name} <span className="text-secondary">({u.email})</span></li>
+                                <li key={i} className={`small ${theme === 'dark' ? 'text-white' : 'text-muted'}`}>{u.name} <span className={`${theme === 'dark' ? 'text-gray-400' : 'text-muted'}`}>({u.email})</span></li>
                               ))}
                             </ul>
                           )}

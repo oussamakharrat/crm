@@ -271,7 +271,7 @@ const Leads = () => {
                     <td className={`company align-middle white-space-nowrap ps-4 border-end border-translucent fw-semibold ${theme === 'dark' ? 'text-light custom-nav-link-dark' : 'text-dark custom-nav-link-light'}`}>
                       {lead.company}
                     </td>
-                    <td className="assigned align-middle white-space-nowrap text-body-tertiary text-opacity-85 ps-4 text-body-tertiary">
+                    <td className={`assigned align-middle white-space-nowrap text-opacity-85 ps-4 ${theme === 'dark' ? 'text-white' : 'text-body-tertiary'}`}>
                       {lead.assigned_to}
                     </td>
                     <td className="align-middle white-space-nowrap text-end pe-0 ps-4">
