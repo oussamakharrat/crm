@@ -13,6 +13,7 @@ import fs from 'fs';
 import invoiceRoutes from './routes/invoiceRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
+import aiLeadRoutes from './routes/aiLeadRoutes.js';
 import db from './config/db.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -70,6 +71,7 @@ app.use("/api", reportRoutes);
 app.use("/api", invoiceRoutes);
 app.use("/api", notificationRoutes);
 app.use('/settings', settingsRoutes);
+app.use('/api/ai-leads', aiLeadRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);

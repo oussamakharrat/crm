@@ -14,6 +14,7 @@ services:
       - DB_PASSWORD=password
       - DB_NAME=crmdb
       - JWT_SECRET=khjdfhksfhjksfdhkbdsfbhkdsf
+      - META_API_KEY=b49e5e93725607d0b162a98b1fd2db46862bba4b63ede6b458fb361492a4cc55
     depends_on:
       - mysql
     volumes:

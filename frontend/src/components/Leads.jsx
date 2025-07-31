@@ -4,6 +4,7 @@ import { ThemeContext } from "../ThemeContext";
 import { Link } from "react-router-dom";
 import api from "../api";
 import ErrorMessage from "./ErrorMessage";
+import AILeadGenerator from "./AILeadGenerator";
 
 const Leads = () => {
   const [leads, setLeads] = useState([]);
@@ -24,6 +25,7 @@ const Leads = () => {
   const { user, roles } = useAuth();
   const { theme } = React.useContext(ThemeContext);
   const [search, setSearch] = useState("");
+  const [showAIModal, setShowAIModal] = useState(false);
 
   useEffect(() => {
     const observer = new MutationObserver(() => {
@@ -78,6 +80,19 @@ const Leads = () => {
 
   const handleCloseModal = () => {
     setShowModal(false);
+  };
+
+  const handleOpenAIModal = () => {
+    setShowAIModal(true);
+  };
+
+  const handleCloseAIModal = () => {
+    setShowAIModal(false);
+  };
+
+  const handleLeadsGenerated = () => {
+    // Refresh the leads list after AI generation
+    fetchLeads();
   };
 
   const handleSubmit = async (e) => {
@@ -188,8 +203,11 @@ const Leads = () => {
           <div className="col-auto">
             <div className="d-md-flex justify-content-between">
               <div>
-                <button className="btn btn-primary me-4" onClick={handleOpenModal}>
+                <button className="btn btn-primary me-2" onClick={handleOpenModal}>
                   <span className="fas fa-plus me-2"></span>Create Lead
+                </button>
+                <button className="btn btn-success me-2" onClick={handleOpenAIModal}>
+                  <span className="fas fa-robot me-2"></span>AI Generate
                 </button>
                 <button className="btn btn-link text-body px-0" type="button">
                   <span className="fa-solid fa-file-export fs-9 me-2"></span>Export
@@ -296,6 +314,14 @@ const Leads = () => {
           )}
         </div>
       </div>
+
+      {/* AI Lead Generator Modal */}
+      {showAIModal && (
+        <AILeadGenerator
+          onLeadsGenerated={handleLeadsGenerated}
+          onClose={handleCloseAIModal}
+        />
+      )}
     </div>
   );
 };

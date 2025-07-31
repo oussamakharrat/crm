@@ -97,4 +97,29 @@ export const fetchClients = (token) => api.get("/clients", {
   headers: { Authorization: `Bearer ${token}` }
 });
 
+// AI Lead Generation API functions
+export const generateLeadsFromText = (token, text, count = 5, assigned_to = null) => {
+  return api.post("/ai-leads/generate-from-text", { text, count, assigned_to }, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+export const generateLeadsFromWebsite = (token, url, count = 5, assigned_to = null) => {
+  return api.post("/ai-leads/generate-from-website", { url, count, assigned_to }, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+export const generateLeadsFromIndustry = (token, industry, location, count = 5, assigned_to = null) => {
+  return api.post("/ai-leads/generate-from-industry", { industry, location, count, assigned_to }, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
+export const previewGeneratedLeads = (token, type, data, count = 5) => {
+  return api.post("/ai-leads/preview", { type, data, count }, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+};
+
 export default api; 
