@@ -24,16 +24,16 @@ const Dashboard = () => {
           )}
           <div className="row g-3 mb-3">
             <div className="col-sm-6 col-md-4 col-xl-3 col-xxl-4">
-              <div className="card h-100 border-0 shadow-none" style={{ backgroundColor: 'var(--phoenix-card-bg) !important', color: 'var(--phoenix-card-color) !important', borderColor: 'var(--phoenix-card-border-color) !important' }}>
+              <div className="card h-100">
                 <div className="card-body">
                   <div className="d-flex d-sm-block justify-content-between">
                     <div className="mb-3">
-                      <h6 className="fw-bold fs-5 d-flex align-items-center mb-2">
-                        <span className="fa-solid fa-phone-alt text-info me-2" style={{fontSize: 28}}></span>
+                      <h6 className="d-flex align-items-center mb-2">
+                        <span className="fa-solid fa-phone-alt me-2" style={{fontSize: 28}}></span>
                         Outgoing call
                       </h6>
-                      <h4 className="fw-bold text-info mb-2">3 Leads Today</h4>
-                      <p className="fs-9 mb-0 fw-semibold text-body-tertiary">
+                      <h4>3</h4>
+                      <p>
                         <span className="badge bg-success-subtle text-success me-1">+24.5%</span>
                         Than Yesterday
                       </p>
@@ -43,16 +43,16 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="col-sm-6 col-md-4 col-xl-3 col-xxl-4">
-              <div className="card h-100 border-0 shadow-none" style={{ backgroundColor: 'var(--phoenix-card-bg) !important', color: 'var(--phoenix-card-color) !important', borderColor: 'var(--phoenix-card-border-color) !important' }}>
+              <div className="card h-100">
                 <div className="card-body">
                   <div className="d-flex d-sm-block justify-content-between">
                     <div className="mb-3">
-                      <h6 className="fw-bold fs-5 d-flex align-items-center mb-2">
-                        <span className="fa-solid fa-calendar text-info me-2"></span>
+                      <h6 className="d-flex align-items-center mb-2">
+                        <span className="fa-solid fa-calendar me-2"></span>
                         Outgoing meeting
                       </h6>
-                      <h4 className="fw-bold text-info mb-2">12 This Week</h4>
-                      <p className="fs-9 mb-0 fw-semibold text-body-tertiary">
+                      <h4>12</h4>
+                      <p>
                         <span className="badge bg-success-subtle text-success me-1">+24.5%</span>
                         Than last week
                       </p>
@@ -62,9 +62,9 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="col-xxl-4">
-              <div className="card h-100 border-0 shadow-none" style={{ backgroundColor: 'var(--phoenix-card-bg) !important', color: 'var(--phoenix-card-color) !important', borderColor: 'var(--phoenix-card-border-color) !important' }}>
+              <div className="card h-100">
                 <div className="card-body">
-                  <h5 className="mb-3">Top 5 Lead Sources</h5>
+                  <h5 className="card-title mb-3">Top 5 Lead Sources</h5>
                   <ol className="mb-0 ps-3">
                     <li>None</li>
                     <li>Online Store</li>

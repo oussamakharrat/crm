@@ -24,6 +24,7 @@ import Settings from "./components/Settings";
 import { LogoProvider } from "./LogoContext";
 import ErrorBoundary from "./components/ErrorBoundary";
 import AdminRolePanel from "./components/AdminRolePanel";
+import "./assets/modal-styles.css";
 
 // AdminRoute: wrapper for admin-only routes
 const AdminRoute = ({ children }) => {

@@ -294,7 +294,7 @@ const AILeadGenerator = ({ onLeadsGenerated, onClose }) => {
   );
 
   return (
-    <div className="modal fade show d-block" tabIndex="-1" role="dialog">
+            <div className="modal fade show d-block" tabIndex="-1" role="dialog" style={{ backdropFilter: 'blur(10px)', backgroundColor: 'rgba(0, 0, 0, 0.6)' }}>
       <div className="modal-dialog modal-lg" role="document">
         <div className="modal-content">
           <div className="modal-header">

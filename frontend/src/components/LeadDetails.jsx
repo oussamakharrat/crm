@@ -15,7 +15,7 @@ const LeadDetails = () => {
           headers: { Authorization: `Bearer ${token}` }
         });
         setLead(res.data);
-      } catch (err) {
+      } catch {
         setError("Failed to fetch lead details");
       }
     };

@@ -67,7 +67,7 @@ const AdminDashboard = () => {
                     <span className={`fw-normal fs-9 mx-1 ${theme === 'dark' ? 'text-white' : 'text-body'}`}><span className="fw-bold">4.</span> Seminar Partner</span><span className={`${theme === 'dark' ? 'text-primary' : 'text-body'}`}>(25)</span>
                   </li>
                   <li className={`list-group-item d-flex justify-content-between align-items-center bg-transparent list-group-crm fw-bold text-body fs-9 py-2 ${theme === 'dark' ? 'text-white' : 'text-body'}`}>
-                    <span className={`fw-normal fs-9 mx-1 ${theme === 'dark' ? 'text-white' : 'text-body'}`}><span className="fw-bold">5.</span> Partner</span><span className={`${theme === 'dark' ? 'text-primary' : 'text-primary'}`}>(23)</span>
+                    <span className={`fw-normal fs-9 mx-1 ${theme === 'dark' ? 'text-white' : 'text-body'}`}><span className="fw-bold">5.</span> Partner</span><span className={`${theme === 'dark' ? 'text-primary' : 'text-body'}`}>(23)</span>
                   </li>
                 </ul>
               </div>

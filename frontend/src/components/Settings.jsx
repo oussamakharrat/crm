@@ -82,7 +82,7 @@ const Settings = () => {
     try {
       await setAppName(appNameInput, user?.token);
       setAppNameSuccess("App name updated successfully!");
-    } catch (err) {
+    } catch {
       setAppNameError("Failed to update app name");
     } finally {
       setAppNameLoading(false);

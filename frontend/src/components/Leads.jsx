@@ -26,6 +26,10 @@ const Leads = () => {
   const { theme } = React.useContext(ThemeContext);
   const [search, setSearch] = useState("");
   const [showAIModal, setShowAIModal] = useState(false);
+  const [editingLead, setEditingLead] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [leadToDelete, setLeadToDelete] = useState(null);
 
   useEffect(() => {
     const observer = new MutationObserver(() => {
@@ -116,6 +120,77 @@ const Leads = () => {
     }
   };
 
+  // Edit lead functionality
+  const handleEditLead = (lead) => {
+    setEditingLead(lead);
+    setForm({
+      name: lead.name || "",
+      email: lead.email || "",
+      phone: lead.phone || "",
+      company: lead.company || "",
+      status: lead.status || "New",
+      source: lead.source || "",
+      notes: lead.notes || "",
+      assigned_to: lead.assigned_to || ""
+    });
+    setFormError(null);
+    setShowEditModal(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setShowEditModal(false);
+    setEditingLead(null);
+  };
+
+  const handleUpdateLead = async (e) => {
+    e.preventDefault();
+    setFormError(null);
+    try {
+      const token = localStorage.getItem('token');
+      const payload = { ...form };
+      if (!isAdmin) {
+        payload.assigned_to = user?.user_id;
+      }
+      await api.put(`/leads/${editingLead.id}`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setShowEditModal(false);
+      setEditingLead(null);
+      fetchLeads();
+    } catch {
+      setFormError("Failed to update lead");
+    }
+  };
+
+  // Delete lead functionality
+  const handleDeleteLead = (lead) => {
+    setLeadToDelete(lead);
+    setShowDeleteModal(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false);
+    setLeadToDelete(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      await api.delete(`/leads/${leadToDelete.id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setShowDeleteModal(false);
+      setLeadToDelete(null);
+      fetchLeads();
+    } catch {
+      setFormError("Failed to delete lead");
+    }
+  };
+
   // Filter leads by search
   const filteredLeads = leads.filter(lead =>
     lead.name && lead.name.toLowerCase().includes(search.toLowerCase())
@@ -125,7 +200,7 @@ const Leads = () => {
     <div className="container-fluid px-0 px-md-3">
       {/* Modal for Add Lead */}
       {showModal && (
-        <div className="modal fade show d-block" tabIndex="-1" role="dialog">
+                        <div className="modal fade show d-block" tabIndex="-1" role="dialog" style={{ backdropFilter: 'blur(10px)', backgroundColor: 'rgba(0, 0, 0, 0.6)' }}>
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <div className="modal-header" >
@@ -185,6 +260,92 @@ const Leads = () => {
           </div>
         </div>
       )}
+
+      {/* Modal for Edit Lead */}
+      {showEditModal && (
+        <div className="modal fade show d-block" tabIndex="-1" role="dialog" style={{ backdropFilter: 'blur(10px)', backgroundColor: 'rgba(0, 0, 0, 0.6)' }}>
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Edit Lead</h5>
+                <button type="button" className="btn-close" onClick={handleCloseEditModal}></button>
+              </div>
+              <form onSubmit={handleUpdateLead}>
+                <div className="modal-body">
+                  <div className="mb-3">
+                    <label className="form-label">Name</label>
+                    <input type="text" className="form-control" name="name" value={form.name} onChange={handleInputChange} required />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">Email</label>
+                    <input type="email" className="form-control" name="email" value={form.email} onChange={handleInputChange} required />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">Phone</label>
+                    <input type="text" className="form-control" name="phone" value={form.phone} onChange={handleInputChange} required />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">Company</label>
+                    <input type="text" className="form-control" name="company" value={form.company} onChange={handleInputChange} />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">Status</label>
+                    <select className="form-select" name="status" value={form.status} onChange={handleInputChange}>
+                      <option value="New">New</option>
+                      <option value="Contacted">Contacted</option>
+                      <option value="Qualified">Qualified</option>
+                      <option value="Lost">Lost</option>
+                      <option value="Won">Won</option>
+                    </select>
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">Source</label>
+                    <input type="text" className="form-control" name="source" value={form.source} onChange={handleInputChange} />
+                  </div>
+                  <div className="mb-3">
+                    <label className="form-label">Notes</label>
+                    <textarea className="form-control" name="notes" value={form.notes} onChange={handleInputChange} />
+                  </div>
+                  {isAdmin && (
+                    <div className="mb-3">
+                      <label className="form-label">Assigned To (User ID)</label>
+                      <input type="text" className="form-control" name="assigned_to" value={form.assigned_to} onChange={handleInputChange} />
+                    </div>
+                  )}
+                  {formError && <ErrorMessage message={formError} />}
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-secondary" onClick={handleCloseEditModal}>Cancel</button>
+                  <button type="submit" className="btn btn-primary">Update Lead</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal for Delete Confirmation */}
+      {showDeleteModal && (
+        <div className="modal fade show d-block" tabIndex="-1" role="dialog" style={{ backdropFilter: 'blur(10px)', backgroundColor: 'rgba(0, 0, 0, 0.6)' }}>
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Confirm Delete</h5>
+                <button type="button" className="btn-close" onClick={handleCloseDeleteModal}></button>
+              </div>
+              <div className="modal-body">
+                <p>Are you sure you want to delete the lead <strong>{leadToDelete?.name}</strong>?</p>
+                <p className="text-muted">This action cannot be undone.</p>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={handleCloseDeleteModal}>Cancel</button>
+                <button type="button" className="btn btn-danger" onClick={handleConfirmDelete}>Delete Lead</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <nav className="mb-4" aria-label="breadcrumb">
         <ol className="breadcrumb mb-0">
           <li className="breadcrumb-item"><a href="#">Dashboard</a></li>
@@ -242,7 +403,7 @@ const Leads = () => {
           ) : error ? (
             <ErrorMessage message={error} />
           ) : (
-            <table className="table fs-9 mb-0 leads-table border-top border-translucent">
+            <table className="table fs-9 mb-0 leads-table">
               <thead>
                 <tr>
                   <th className="white-space-nowrap fs-9 align-middle ps-0" >
@@ -271,9 +432,11 @@ const Leads = () => {
                       <div className="d-flex align-items-center">
                         <div>
                           <span className={`fs-8 fw-bold ${theme === 'dark' ? 'text-light' : 'text-dark'}`}>{lead.name}</span>
-                          <div className="d-flex align-items-center">
-                            <p className={`mb-0 fw-semibold fs-9 me-2 ${theme === 'dark' ? 'text-light custom-nav-link-dark' : 'text-dark custom-nav-link-light'}`}>{lead.status}</p>
-                          </div>
+                                                     <div className="d-flex align-items-center">
+                             <span className={`badge bg-${lead.status.toLowerCase() === 'new' ? 'primary' : lead.status.toLowerCase() === 'contacted' ? 'warning' : lead.status.toLowerCase() === 'qualified' ? 'success' : lead.status.toLowerCase() === 'won' ? 'success' : 'secondary'}`}>
+                               {lead.status}
+                             </span>
+                           </div>
                         </div>
                       </div>
                     </td>
@@ -283,9 +446,11 @@ const Leads = () => {
                     <td className={`phone align-middle white-space-nowrap fw-semibold ps-4 border-end border-translucent`}>
                       <a className={`${theme === 'dark' ? 'text-light custom-nav-link-dark' : 'text-dark custom-nav-link-light'}`} href={`tel:${lead.phone}`}>{lead.phone}</a>
                     </td>
-                    <td className={`status align-middle white-space-nowrap ps-4 border-end border-translucent fw-semibold ${theme === 'dark' ? 'text-light custom-nav-link-dark' : 'text-dark custom-nav-link-light'}`}>
-                      {lead.status}
-                    </td>
+                                         <td className="status align-middle white-space-nowrap ps-4 border-end border-translucent">
+                       <span className={`badge bg-${lead.status.toLowerCase() === 'new' ? 'primary' : lead.status.toLowerCase() === 'contacted' ? 'warning' : lead.status.toLowerCase() === 'qualified' ? 'success' : lead.status.toLowerCase() === 'won' ? 'success' : 'secondary'}`}>
+                         {lead.status}
+                       </span>
+                     </td>
                     <td className={`company align-middle white-space-nowrap ps-4 border-end border-translucent fw-semibold ${theme === 'dark' ? 'text-light custom-nav-link-dark' : 'text-dark custom-nav-link-light'}`}>
                       {lead.company}
                     </td>
@@ -300,9 +465,14 @@ const Leads = () => {
                         <div className="dropdown-menu dropdown-menu-end py-2">
                           <Link className="dropdown-item" to={`/deal-details/${lead.id}`}>View in Deal Details</Link>
                           <Link className="dropdown-item" to={`/lead-details/${lead.id}`}>View in Lead Details</Link>
+                          <button className="dropdown-item" onClick={() => handleEditLead(lead)}>
+                            <i className="fas fa-edit me-2"></i>Edit Lead
+                          </button>
                           <a className="dropdown-item" href="#">Export</a>
                           <div className="dropdown-divider"></div>
-                          <a className="dropdown-item text-danger" href="#">Remove</a>
+                          <button className="dropdown-item text-danger" onClick={() => handleDeleteLead(lead)}>
+                            <i className="fas fa-trash me-2"></i>Delete Lead
+                          </button>
                         </div>
                       </div>
                       <Link to={`/lead-details/${lead.id}`} className="btn btn-outline-primary btn-sm ms-2">View Details</Link>

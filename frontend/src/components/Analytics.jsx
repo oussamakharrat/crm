@@ -13,6 +13,7 @@ const Analytics = () => {
   const [revenueByMonth, setRevenueByMonth] = useState([]);
   const [dealsByStage, setDealsByStage] = useState([]);
   const [leadsByStatus, setLeadsByStatus] = useState([]);
+  const [topPerformers, setTopPerformers] = useState([]);
   const [error, setError] = useState(null);
   const { user } = useContext(AuthContext);
   const { theme } = useContext(ThemeContext);
@@ -26,14 +27,17 @@ const Analytics = () => {
     Promise.all([
       axios.get('/api/reports/revenue-by-month', config),
       axios.get('/api/reports/deals-by-stage', config),
-      axios.get('/api/reports/leads-by-status', config)
-    ]).then(([revenueRes, dealsRes, leadsRes]) => {
+      axios.get('/api/reports/leads-by-status', config),
+      axios.get('/api/reports/top-performers', config)
+    ]).then(([revenueRes, dealsRes, leadsRes, performersRes]) => {
       console.log('Revenue:', revenueRes.data);
       console.log('Deals:', dealsRes.data);
       console.log('Leads:', leadsRes.data);
+      console.log('Top Performers:', performersRes.data);
       setRevenueByMonth(revenueRes.data || []);
       setDealsByStage(dealsRes.data || []);
       setLeadsByStatus(leadsRes.data || []);
+      setTopPerformers(performersRes.data || []);
       setLoading(false);
     }).catch(() => {
       setError("Failed to fetch analytics data");
@@ -320,9 +324,64 @@ const Analytics = () => {
           <div className="col-lg-4">
             <div className="card analytics-card">
               <div className="card-header bg-card-header border-bottom border-card-border"><h5 className="mb-0">Top Performers</h5></div>
-              <div className="card-body">
-                {/* Removed topPerformers display */}
-              </div>
+                             <div className="card-body p-0">
+                 {topPerformers.length > 0 ? (
+                   <div className="list-group list-group-flush">
+                     {topPerformers.map((performer, index) => (
+                       <div key={performer.name} className="list-group-item border-0 px-3 py-3">
+                         <div className="d-flex align-items-center">
+                           {/* Rank Badge */}
+                           <div className="me-3">
+                             <div 
+                               className="rounded-circle d-flex align-items-center justify-content-center fw-bold"
+                               style={{
+                                 width: '28px',
+                                 height: '28px',
+                                 fontSize: '12px',
+                                 backgroundColor: index === 0 ? '#FFD700' : index === 1 ? '#C0C0C0' : index === 2 ? '#CD7F32' : '#6c757d',
+                                 color: 'white'
+                               }}
+                             >
+                               {index + 1}
+                             </div>
+                           </div>
+                           
+                           
+                           
+                           {/* User Info */}
+                           <div className="flex-grow-1">
+                             <div className="fw-bold mb-1" style={{ color: 'var(--phoenix-emphasis-color)', fontSize: '14px' }}>
+                               {performer.name}
+                             </div>
+                             <div className="text-muted" style={{ fontSize: '12px' }}>
+                               {index === 0 ? '🥇 Gold' : index === 1 ? '🥈 Silver' : index === 2 ? '🥉 Bronze' : 'Performer'}
+                             </div>
+                           </div>
+                           
+                           {/* Revenue */}
+                           <div className="text-end">
+                             <div className="fw-bold mb-1" style={{ color: 'var(--phoenix-link-color)', fontSize: '14px' }}>
+                               ${Number(performer.total_revenue).toLocaleString()}
+                             </div>
+                             <div className="text-muted" style={{ fontSize: '11px' }}>
+                               Revenue
+                             </div>
+                           </div>
+                         </div>
+                       </div>
+                     ))}
+                   </div>
+                 ) : (
+                   <div className="text-center py-4">
+                     <div className="mb-3">
+                       <i className="fas fa-trophy" style={{ fontSize: '2rem', color: 'var(--phoenix-tertiary-color)' }}></i>
+                     </div>
+                     <div className="text-muted" style={{ fontSize: '14px' }}>
+                       No performance data available
+                     </div>
+                   </div>
+                 )}
+               </div>
             </div>
           </div>
         </div>

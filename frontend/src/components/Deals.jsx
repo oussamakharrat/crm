@@ -195,8 +195,8 @@ const Deals = () => {
           <div className="row deals g-4" style={{ overflowX: 'auto' }}>
             {DEAL_STAGES.map(stage => (
               <div className="col-12 col-md-6 col-lg-4 d-flex" key={stage.key}>
-                <div className="deals-col flex-grow-1 w-100" style={{ minWidth: 0 }}>
-                  <div className={`d-flex align-items-center justify-content-between position-sticky top-0 z-1 py-3 px-2 border-bottom border-2 border-primary-subtle mb-2 rounded-top-3 ${theme === "light" ? "bg-body" : "bg-dark"}`}>
+                <div className="card flex-grow-1 w-100" style={{ minWidth: 0 }}>
+                  <div className="card-header">
                     <div>
                       <h5 className="mb-2 fw-bold">{stage.label}</h5>
                       <p className="fs-9 text-body-tertiary mb-1">Forecast Revenue:</p>
@@ -211,58 +211,104 @@ const Deals = () => {
                     <div className="w-100 min-vh-50" data-sortable="data-sortable">
                       {dealsByStage[stage.key] && dealsByStage[stage.key].length > 0 ? (
                         dealsByStage[stage.key].map((deal) => (
-                          <div className="card mb-3 shadow-sm border-0 rounded-3" key={deal.id}>
+                          <div className="card mb-3 shadow-sm border-0 rounded-3 deal-card" key={deal.id} style={{ 
+                            border: `1px solid ${theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`,
+                            backgroundColor: theme === 'dark' ? 'var(--phoenix-card-bg)' : 'var(--phoenix-card-bg)'
+                          }}>
                             <div className="card-body p-3">
-                              <a
-                                className="dropdown-indicator-icon position-absolute text-body-tertiary"
-                                href={`#collapseWidthDeals-${deal.id}`}
-                                role="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target={`#collapseWidthDeals-${deal.id}`}
-                                aria-expanded="false"
-                                aria-controls={`#collapseWidthDeals-${deal.id}`}
-                                style={{ right: 16, top: 16 }}
-                              >
-                                <span className="fa-solid fa-angle-down"></span>
-                              </a>
-                              <div className="d-flex align-items-center justify-content-between mb-2">
-                                <div className="d-flex align-items-center gap-2"><span className="me-2" data-feather="clock" style={{strokeWidth:2}}></span>
-                                  <p className={`mb-0 fs-9 fw-semibold ${theme === 'dark' ? 'text-white' : 'text-body-tertiary'} date`}>{deal.created_at ? new Date(deal.created_at).toLocaleString() : ""}</p>
+                              {/* Deal Header */}
+                              <div className="d-flex align-items-center justify-content-between mb-3">
+                                <div className="d-flex align-items-center gap-2">
+                                  <span className="fa-solid fa-clock me-2" style={{color: 'var(--phoenix-primary)'}}></span>
+                                  <p className={`mb-0 fs-9 fw-semibold ${theme === 'dark' ? 'text-white' : 'text-body-tertiary'}`}>
+                                    {deal.created_at ? new Date(deal.created_at).toLocaleDateString() : ""}
+                                  </p>
+                                </div>
+                                <div className="dropdown">
+                                  <button className="btn btn-sm btn-link text-body-tertiary p-0" type="button" data-bs-toggle="dropdown">
+                                    <span className="fa-solid fa-ellipsis-v"></span>
+                                  </button>
+                                  <ul className="dropdown-menu dropdown-menu-end">
+                                    <li><Link className="dropdown-item" to={`/deal-details/${deal.id}`}>View Details</Link></li>
+                                    {isAdmin && (
+                                      <>
+                                        <li><hr className="dropdown-divider" /></li>
+                                        <li><button className="dropdown-item text-warning" onClick={() => { setEditingDealId(deal.id); setNewStage(deal.stage || ""); }}>Edit Stage</button></li>
+                                        <li><button className="dropdown-item text-danger" onClick={() => handleDeleteDeal(deal.id)}>Delete</button></li>
+                                      </>
+                                    )}
+                                  </ul>
                                 </div>
                               </div>
-                              <div className="deals-items-head d-flex align-items-center mb-2 gap-2 flex-wrap">
-                                <Link className="text-primary fw-bold line-clamp-1 me-2 mb-0 fs-7" to={`/deal-details/${deal.id}`}>{deal.title}</Link>
-                                <span className={`badge ${theme === "light" ? "bg-body text-secondary" : "bg-dark text-white"} ms-auto fs-9`}>${deal.value?.toLocaleString()}</span>
-                              </div>
-                              <div className="deals-company-agent d-flex flex-between-center gap-2 mb-2 flex-wrap">
-                                <div className="d-flex align-items-center gap-1"><span className="uil uil-user me-1"></span>
-                                  <span className={`${theme === 'dark' ? 'text-white' : 'text-body-secondary'} fw-bold fs-9`}>Owner ID: {deal.owner_id}</span>
+
+                              {/* Deal Title and Value */}
+                              <div className="mb-3">
+                                <h6 className="card-title mb-2">
+                                  <Link className="text-decoration-none fw-bold" to={`/deal-details/${deal.id}`} style={{color: 'var(--phoenix-primary)'}}>
+                                    {deal.title}
+                                  </Link>
+                                </h6>
+                                <div className="d-flex align-items-center justify-content-between">
+                                  <span className={`badge ${theme === "light" ? "bg-primary text-white" : "bg-primary text-white"} fs-9`}>
+                                    ${deal.value?.toLocaleString()}
+                                  </span>
+                                  <span className={`badge ${theme === "light" ? "bg-success text-white" : "bg-success text-white"} fs-9`}>
+                                    {deal.stage || 'Unknown'}
+                                  </span>
                                 </div>
-                                <div className="d-flex align-items-center gap-1"><span className="uil uil-headphones me-1"></span>
-                                  <span className={`${theme === 'dark' ? 'text-white' : 'text-body-secondary'} fw-bold fs-9`}>Contact ID: {deal.contact_id}</span>
+                              </div>
+
+                              {/* Deal Details */}
+                              <div className="mb-3">
+                                <div className="row g-2">
+                                  <div className="col-6">
+                                    <div className="d-flex align-items-center gap-1">
+                                      <span className="fa-solid fa-user me-1" style={{fontSize: '12px', color: 'var(--phoenix-secondary)'}}></span>
+                                      <span className={`${theme === 'dark' ? 'text-white' : 'text-body-secondary'} fw-semibold fs-9`}>
+                                        Owner: {deal.owner_id}
+                                      </span>
+                                    </div>
+                                  </div>
+                                  <div className="col-6">
+                                    <div className="d-flex align-items-center gap-1">
+                                      <span className="fa-solid fa-address-book me-1" style={{fontSize: '12px', color: 'var(--phoenix-secondary)'}}></span>
+                                      <span className={`${theme === 'dark' ? 'text-white' : 'text-body-secondary'} fw-semibold fs-9`}>
+                                        Contact: {deal.contact_id}
+                                      </span>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
-                              {/* Collapsible details section (optional) */}
-                              <div className="collapse" id={`collapseWidthDeals-${deal.id}`}></div>
-                              <div className="mt-2 d-flex gap-2 flex-wrap">
-                                <Link to={`/deal-details/${deal.id}`} className="btn btn-outline-primary btn-sm">View Details</Link>
+
+                              {/* Action Buttons */}
+                              <div className="d-flex gap-2 flex-wrap">
+                                <Link to={`/deal-details/${deal.id}`} className="btn btn-outline-primary btn-sm flex-fill">
+                                  <span className="fa-solid fa-eye me-1"></span>
+                                  View Details
+                                </Link>
                                 {isAdmin && (
                                   <>
                                     {editingDealId === deal.id ? (
-                                      <form className="d-inline-flex align-items-center gap-2 flex-wrap" onSubmit={e => {e.preventDefault(); handleUpdateStage(deal.id);}}>
-                                        <select className="form-select form-select-sm" value={newStage} onChange={e => setNewStage(e.target.value)} required style={{ width: 150 }}>
+                                      <div className="d-flex gap-2 flex-wrap w-100 mt-2">
+                                        <select className="form-select form-select-sm" value={newStage} onChange={e => setNewStage(e.target.value)} required style={{ flex: '1', minWidth: '120px' }}>
                                           <option value="" disabled>Select Stage</option>
                                           {DEAL_STAGES.map(s => (
                                             <option key={s.key} value={s.key}>{s.label}</option>
                                           ))}
                                         </select>
-                                        <button className="btn btn-success btn-sm" type="submit" disabled={updating}>{updating ? "Updating..." : "Save"}</button>
-                                        <button className="btn btn-secondary btn-sm" type="button" onClick={() => setEditingDealId(null)} disabled={updating}>Cancel</button>
-                                      </form>
+                                        <button className="btn btn-success btn-sm" type="button" onClick={() => handleUpdateStage(deal.id)} disabled={updating}>
+                                          {updating ? "Updating..." : "Save"}
+                                        </button>
+                                        <button className="btn btn-secondary btn-sm" type="button" onClick={() => setEditingDealId(null)} disabled={updating}>
+                                          Cancel
+                                        </button>
+                                      </div>
                                     ) : (
-                                      <button className="btn btn-warning btn-sm" type="button" onClick={() => { setEditingDealId(deal.id); setNewStage(deal.stage || ""); }}>Update</button>
+                                      <button className="btn btn-warning btn-sm" type="button" onClick={() => { setEditingDealId(deal.id); setNewStage(deal.stage || ""); }}>
+                                        <span className="fa-solid fa-edit me-1"></span>
+                                        Edit
+                                      </button>
                                     )}
-                                    <button className="btn btn-danger btn-sm" type="button" onClick={() => handleDeleteDeal(deal.id)}>Delete</button>
                                   </>
                                 )}
                               </div>
