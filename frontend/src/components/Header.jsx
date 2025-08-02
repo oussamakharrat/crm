@@ -37,6 +37,8 @@ const Header = () => {
     };
   }, [showNotificationDropdown]);
 
+
+
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
@@ -150,7 +152,13 @@ const Header = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <span className="fas fa-search search-box-icon"></span>
+            <span 
+              className="fas fa-search search-box-icon"
+              style={{
+                color: theme === 'dark' ? '#ffffff' : '#31374a',
+                transition: 'color 0.3s ease'
+              }}
+            ></span>
           </form>
         </div>
         <ul className="navbar-nav navbar-nav-icons flex-row">
@@ -164,7 +172,15 @@ const Header = () => {
                 onClick={toggleTheme}
                 title="Toggle theme"
               >
-                <span className={`fas fa-moon fs-0 `}></span>
+                                 <span 
+                   className={`fas fa-moon fs-0`}
+                   style={{
+                     color: theme === 'dark' ? '#ffffff' : '#31374a',
+                     transition: 'color 0.3s ease',
+                     fontSize: '16px',
+                     lineHeight: '1'
+                   }}
+                 ></span>
               </button>
             </div>
           </li>
@@ -187,12 +203,27 @@ const Header = () => {
                   className="d-block"
                   style={{ height: "20px", width: "20px" }}
                 >
-                  <span
-                    className={`fas fa-bell ${theme === 'dark' ? 'text-light' : 'text-dark'}`}
-                    style={{ height: "20px", width: "20px" }}
-                  ></span>
+                                     <span
+                     className={`fas fa-bell ${theme === 'dark' ? 'text-light' : 'text-dark'}`}
+                     style={{ 
+                       height: "20px", 
+                       width: "20px",
+                       color: theme === 'dark' ? '#ffffff' : '#31374a',
+                       transition: 'color 0.3s ease',
+                       fontSize: '16px',
+                       lineHeight: '1',
+                       display: 'inline-block'
+                     }}
+                   ></span>
                 </span>
-                <span className="badge rounded-pill bg-soft-secondary text-secondary bg-soft-warning text-warning count-indicator">
+                <span 
+                  className="badge rounded-pill bg-soft-secondary text-secondary bg-soft-warning text-warning count-indicator"
+                  style={{
+                    backgroundColor: theme === 'dark' ? '#2d3748' : '#f8f9fa',
+                    color: theme === 'dark' ? '#ffffff' : '#31374a',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
                   {notifications.filter((n) => n.unread).length}
                 </span>
               </button>
@@ -291,7 +322,13 @@ const Header = () => {
                                     </span>
                                   </p>
                                   <p className="text-body-secondary fs-9 mb-0">
-                                    <span className="me-1 fas fa-clock"></span>
+                                    <span 
+                                      className="me-1 fas fa-clock"
+                                      style={{
+                                        color: theme === 'dark' ? '#a0aec0' : '#6c757d',
+                                        transition: 'color 0.3s ease'
+                                      }}
+                                    ></span>
                                     <span className="fw-bold">
                                       {notification.time || ""}{" "}
                                     </span>
@@ -310,7 +347,13 @@ const Header = () => {
                                   data-bs-reference="parent"
                                   onClick={(e) => e.stopPropagation()}
                                 >
-                                  <span className="fas fa-ellipsis-h fs-10 text-body"></span>
+                                  <span 
+                                    className="fas fa-ellipsis-h fs-10 text-body"
+                                    style={{
+                                      color: theme === 'dark' ? '#ffffff' : '#31374a',
+                                      transition: 'color 0.3s ease'
+                                    }}
+                                  ></span>
                                 </button>
                                 <div className="dropdown-menu py-2">
                                   {notification.pdf_path ||

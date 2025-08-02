@@ -1,28 +1,48 @@
 import React, { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../AuthContext";
-import api from "../api";
+import { fetchContacts, deleteContact } from "../api";
 import { ThemeContext } from "../ThemeContext";
 
 const Contacts = () => {
   const [contacts, setContacts] = useState([]);
+  const [loading, setLoading] = useState(false);
   const { user } = useContext(AuthContext);
   const { theme } = useContext(ThemeContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchContacts = async () => {
+    const loadContacts = async () => {
       try {
-        const res = await api.get("/contacts", {
-          headers: {
-            "Authorization": `Bearer ${user?.token}`
-          }
-        });
+        const res = await fetchContacts(user?.token);
         setContacts(res.data);
       } catch {
         setContacts([]);
       }
     };
-    if (user?.token) fetchContacts();
+    if (user?.token) loadContacts();
   }, [user]);
+
+  const handleDelete = async (contactId) => {
+    if (!window.confirm("Are you sure you want to delete this contact?")) {
+      return;
+    }
+    
+    setLoading(true);
+    try {
+      await deleteContact(user?.token, contactId);
+      setContacts(contacts.filter(contact => contact.id !== contactId));
+    } catch (err) {
+      console.error("Failed to delete contact:", err);
+      alert("Failed to delete contact");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEdit = (contactId) => {
+    navigate(`/contacts/edit/${contactId}`);
+  };
 
   return (
     <div className="container-fluid px-0 px-md-3">
@@ -87,14 +107,37 @@ const Contacts = () => {
                         </td>
                         <td className="align-middle white-space-nowrap text-end pe-0 ps-4">
                           <div className="btn-reveal-trigger position-static">
-                            <button className="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" type="button" data-bs-toggle="dropdown">
+                            <button 
+                              className="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal fs-10" 
+                              type="button" 
+                              data-bs-toggle="dropdown"
+                              disabled={loading}
+                            >
                               <span className="fas fa-ellipsis-h fs-10"></span>
                             </button>
                             <div className="dropdown-menu dropdown-menu-end py-2">
                               <a className="dropdown-item" href="#!">View</a>
-                              <a className="dropdown-item" href="#!">Edit</a>
+                              <a 
+                                className="dropdown-item" 
+                                href="#!" 
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  handleEdit(contact.id);
+                                }}
+                              >
+                                Edit
+                              </a>
                               <div className="dropdown-divider"></div>
-                              <a className="dropdown-item text-danger" href="#!">Remove</a>
+                              <a 
+                                className="dropdown-item text-danger" 
+                                href="#!" 
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  handleDelete(contact.id);
+                                }}
+                              >
+                                {loading ? 'Removing...' : 'Remove'}
+                              </a>
                             </div>
                           </div>
                         </td>

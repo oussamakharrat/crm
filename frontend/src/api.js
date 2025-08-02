@@ -93,6 +93,30 @@ export const fetchContacts = (token) => api.get("/contacts", {
   headers: { Authorization: `Bearer ${token}` }
 });
 
+export const fetchContactById = (token, id) => api.get(`/contacts/${id}`, {
+  headers: { Authorization: `Bearer ${token}` }
+});
+
+export const fetchLeads = (token) => api.get("/leads", {
+  headers: { Authorization: `Bearer ${token}` }
+});
+
+export const updateLead = (token, id, leadData) => api.put(`/leads/${id}`, leadData, {
+  headers: { Authorization: `Bearer ${token}` }
+});
+
+export const createContact = (token, contactData) => api.post("/contacts", contactData, {
+  headers: { Authorization: `Bearer ${token}` }
+});
+
+export const updateContact = (token, id, contactData) => api.put(`/contacts/${id}`, contactData, {
+  headers: { Authorization: `Bearer ${token}` }
+});
+
+export const deleteContact = (token, id) => api.delete(`/contacts/${id}`, {
+  headers: { Authorization: `Bearer ${token}` }
+});
+
 export const fetchClients = (token) => api.get("/clients", {
   headers: { Authorization: `Bearer ${token}` }
 });

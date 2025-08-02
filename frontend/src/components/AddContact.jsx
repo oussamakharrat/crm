@@ -1,8 +1,12 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../AuthContext";
 import ErrorMessage from "./ErrorMessage";
+import { createContact, fetchLeads, updateLead } from "../api";
 
 const AddContact = () => {
+  const [leads, setLeads] = useState([]);
+  const [selectedLead, setSelectedLead] = useState(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -10,37 +14,90 @@ const AddContact = () => {
   const [address, setAddress] = useState("");
   const [success, setSuccess] = useState(null);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [leadsLoading, setLeadsLoading] = useState(true);
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const loadLeads = async () => {
+      try {
+        const res = await fetchLeads(user?.token);
+        setLeads(res.data);
+      } catch (err) {
+        setError("Failed to load leads");
+      } finally {
+        setLeadsLoading(false);
+      }
+    };
+
+    if (user?.token) {
+      loadLeads();
+    }
+  }, [user]);
+
+  const handleLeadSelect = (lead) => {
+    setSelectedLead(lead);
+    const nameParts = lead.name.split(' ');
+    setFirstName(nameParts[0] || '');
+    setLastName(nameParts.slice(1).join(' ') || '');
+    setEmail(lead.email || '');
+    setPhone(lead.phone || '');
+    setAddress(lead.company || ''); // Use company as address
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSuccess(null);
     setError(null);
+    setLoading(true);
+
     try {
-      const res = await fetch("/api/contacts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${user?.token}`
-        },
-        body: JSON.stringify({
-          name: `${firstName} ${lastName}`.trim(),
-          email,
-          phone,
-          address
-        })
+      // Create the contact
+      await createContact(user?.token, {
+        name: `${firstName} ${lastName}`.trim(),
+        email,
+        phone,
+        address
       });
-      if (!res.ok) throw new Error("Failed to add contact");
-      setSuccess("Contact added successfully!");
-      setFirstName("");
-      setLastName("");
-      setEmail("");
-      setPhone("");
-      setAddress("");
-    } catch {
-      setError("Failed to add contact");
+
+      // If converting from a lead, update the lead status to "Converted"
+      if (selectedLead) {
+        try {
+          await updateLead(user?.token, selectedLead.id, {
+            ...selectedLead,
+            status: "Converted"
+          });
+        } catch (err) {
+          console.warn("Failed to update lead status:", err);
+        }
+      }
+
+      setSuccess(selectedLead ? "Contact created successfully from lead!" : "Contact created successfully!");
+      setTimeout(() => {
+        navigate('/contacts');
+      }, 1500);
+    } catch (err) {
+      setError("Failed to create contact");
+    } finally {
+      setLoading(false);
     }
   };
+
+  const handleCreateNew = () => {
+    setSelectedLead(null);
+    setFirstName("");
+    setLastName("");
+    setEmail("");
+    setPhone("");
+    setAddress("");
+  };
+
+  // Filter leads by status (show only qualified leads, exclude converted ones)
+  const qualifiedLeads = leads.filter(lead => 
+    (lead.status === 'Qualified' || lead.status === 'Contacted' || lead.status === 'New') && 
+    lead.status !== 'Converted'
+  );
 
   return (
     <>
@@ -53,9 +110,95 @@ const AddContact = () => {
       </nav>
       <div className="pb-6">
         <h2 className="mb-4">Add New Contact</h2>
+        
+        {/* Lead Selection Section */}
+        <div className="card mb-4">
+          <div className="card-header">
+            <h5 className="mb-0">Select from Leads</h5>
+          </div>
+          <div className="card-body">
+            {leadsLoading ? (
+              <div className="text-center">
+                <div className="spinner-border" role="status">
+                  <span className="visually-hidden">Loading...</span>
+                </div>
+                <p className="mt-2">Loading leads...</p>
+              </div>
+            ) : (
+              <>
+                <div className="mb-3">
+                  <button 
+                    type="button" 
+                    className="btn btn-outline-primary"
+                    onClick={handleCreateNew}
+                  >
+                    <i className="fas fa-plus me-2"></i>
+                    Create New Contact
+                  </button>
+                </div>
+                
+                {qualifiedLeads.length === 0 ? (
+                  <div className="alert alert-info">
+                    No qualified leads found. You can create a new contact instead.
+                  </div>
+                ) : (
+                  <div className="table-responsive">
+                    <table className="table table-hover">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Email</th>
+                          <th>Phone</th>
+                          <th>Company</th>
+                          <th>Status</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {qualifiedLeads.map(lead => (
+                          <tr 
+                            key={lead.id} 
+                            className={selectedLead?.id === lead.id ? 'table-primary' : ''}
+                          >
+                            <td>{lead.name}</td>
+                            <td>{lead.email}</td>
+                            <td>{lead.phone}</td>
+                            <td>{lead.company}</td>
+                            <td>
+                              <span className={`badge bg-${
+                                lead.status.toLowerCase() === 'new' ? 'primary' : 
+                                lead.status.toLowerCase() === 'contacted' ? 'warning' : 
+                                lead.status.toLowerCase() === 'qualified' ? 'success' : 'secondary'
+                              }`}>
+                                {lead.status}
+                              </span>
+                            </td>
+                            <td>
+                              <button 
+                                type="button" 
+                                className="btn btn-sm btn-primary"
+                                onClick={() => handleLeadSelect(lead)}
+                              >
+                                {selectedLead?.id === lead.id ? 'Selected' : 'Select'}
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Contact Form */}
         <div className="card">
           <div className="card-header">
-            <h5 className="mb-0">Contact Information</h5>
+            <h5 className="mb-0">
+              {selectedLead ? 'Convert Lead to Contact' : 'Contact Information'}
+            </h5>
           </div>
           <div className="card-body">
             <form onSubmit={handleSubmit}>
@@ -121,24 +264,35 @@ const AddContact = () => {
                   ></textarea>
                 </div>
               </div>
+              
+              {selectedLead && (
+                <div className="alert alert-info mt-3">
+                  <i className="fas fa-info-circle me-2"></i>
+                  Converting lead: <strong>{selectedLead.name}</strong> ({selectedLead.status})
+                </div>
+              )}
+              
               <div className="d-flex justify-content-end mt-4">
                 <button 
                   type="button" 
                   className="btn btn-secondary me-2" 
-                  onClick={() => {
-                    setFirstName(""); 
-                    setLastName(""); 
-                    setEmail(""); 
-                    setPhone(""); 
-                    setAddress(""); 
-                    setSuccess(null); 
-                    setError(null);
-                  }}
+                  onClick={() => navigate('/contacts')}
                 >
                   Cancel
                 </button>
-                <button type="submit" className="btn btn-primary">
-                  Save Contact
+                <button 
+                  type="submit" 
+                  className="btn btn-primary"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                      Creating...
+                    </>
+                  ) : (
+                    selectedLead ? 'Convert to Contact' : 'Save Contact'
+                  )}
                 </button>
               </div>
               {error && <ErrorMessage message={error} />}

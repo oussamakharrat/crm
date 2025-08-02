@@ -13,6 +13,7 @@ import Leads from "./components/Leads";
 import Reports from "./components/Reports";
 import Analytics from "./components/Analytics";
 import AddContact from "./components/AddContact";
+import EditContact from "./components/EditContact";
 import DealDetails from "./components/DealDetails";
 import LeadDetails from "./components/LeadDetails";
 import ReportDetails from "./components/ReportDetails";
@@ -46,6 +47,7 @@ const MainApp = () => {
           <Routes>
             <Route path="/dashboard" element={<PrivateRoute><RoleBasedDashboard /></PrivateRoute>} />
             <Route path="/contacts" element={<PrivateRoute><Contacts /></PrivateRoute>} />
+            <Route path="/contacts/edit/:id" element={<PrivateRoute><EditContact /></PrivateRoute>} />
             <Route path="/deals" element={<PrivateRoute><Deals /></PrivateRoute>} />
             <Route path="/leads" element={<PrivateRoute><Leads /></PrivateRoute>} />
             <Route path="/reports" element={<PrivateRoute><Reports /></PrivateRoute>} />
